@@ -9,18 +9,46 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text:               '#0C0C0C',
+    background:         '#FFFFFF',
+    backgroundElement:  '#F4F4F4',
+    backgroundSelected: '#E8FBF5',
+    textSecondary:      '#6B6B6B',
+
+    primary:            '#00D09C',
+    primarySubtle:      '#E0FAF3',
+
+    accent:             '#5367F5',
+    accentSubtle:       '#E5F4FD',
+
+    surface:            '#FFFFFF',
+    border:             '#EBEBEB',
+
+    income:             '#00D09C',
+    expense:            '#F45B69',
+    warning:            '#F5A623',
+    error:              '#F45B69',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text:               '#EFEFEF',
+    background:         '#0C0C0C',
+    backgroundElement:  '#181818',
+    backgroundSelected: '#0D2A22',
+    textSecondary:      '#8A8A8A',
+
+    primary:            '#00D09C',
+    primarySubtle:      '#0A2219',
+
+    accent:             '#7A8FFB',
+    accentSubtle:       '#1A1F3A',
+
+    surface:            '#111111',
+    border:             '#242424',
+
+    income:             '#00D09C',
+    expense:            '#F45B69',
+    warning:            '#F5A623',
+    error:              '#F45B69',
   },
 } as const;
 

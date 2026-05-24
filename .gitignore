@@ -41,3 +41,75 @@ example
 # generated native folders
 /ios
 /android
+
+# ===== Universal AI Agent Files =====
+AGENTS.override.md
+CLAUDE.local.md
+
+# ===== Claude Code =====
+.claude/
+CLAUDE.md
+
+# ===== Cursor =====
+.cursorrules
+.cursor/
+
+# ===== Windsurf =====
+.windsurfrules
+.windsurf/
+
+# ===== Cline =====
+.clinerules
+
+# ===== RooCode =====
+.roo/
+
+# ===== Aider =====
+.aider*
+.aider/
+
+# ===== Continue.dev =====
+.continue/
+
+# ===== Gemini CLI =====
+GEMINI.md
+.gemini/
+
+# ===== Copilot =====
+.github/copilot-instructions.md
+.github/instructions/
+
+# ===== Codex / OpenAI =====
+.codex/
+.codexrc
+.codexignore
+
+# ===== OpenHands =====
+openhands.json
+.openhands/
+
+# ===== Zed AI =====
+.zed/
+
+# ===== Warp AI =====
+.warp/
+
+# ===== Local AI Memories / Chats =====
+**/memory/
+**/.memory/
+**/chat-history/
+**/.chat-history/
+
+# ===== AI Generated Temp Files =====
+llm-debug.log
+ai-debug.log
+prompt-history.txt
+prompts.local.md
+agent-cache/
+.ai/
+
+# ===== MCP / Tooling =====
+.mcp/
+mcp.config.json
+
+docs/
