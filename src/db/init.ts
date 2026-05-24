@@ -15,11 +15,12 @@ export async function openDatabase(
   await db.execAsync('PRAGMA cache_size = -8000;');
   await db.execAsync('PRAGMA synchronous = NORMAL;');
 
-  // SQLCipher key — uncomment in S1-09 when AuthService is wired:
-  // if (encryptionKey !== null) {
-  //   await db.execAsync(`PRAGMA key = "${encryptionKey}";`);
-  // }
-  void encryptionKey;
+  // SQLCipher PRAGMA key — active when a key is provided.
+  // Requires SQLCipher native build (custom dev client via EAS).
+  // No-op on standard expo-sqlite in managed workflow.
+  if (encryptionKey !== null) {
+    await db.execAsync(`PRAGMA key = "${encryptionKey}";`);
+  }
 
   return db;
 }
