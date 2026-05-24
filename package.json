@@ -6,13 +6,17 @@
     "@expo/ui": "~56.0.13",
     "expo": "~56.0.4",
     "expo-constants": "~56.0.15",
+    "expo-crypto": "~56.0.3",
     "expo-device": "~56.0.4",
     "expo-font": "~56.0.5",
     "expo-glass-effect": "~56.0.4",
     "expo-image": "~56.0.9",
     "expo-linking": "~56.0.11",
+    "expo-local-authentication": "~56.0.4",
     "expo-router": "~56.2.6",
+    "expo-secure-store": "~56.0.4",
     "expo-splash-screen": "~56.0.10",
+    "expo-sqlite": "~56.0.4",
     "expo-status-bar": "~56.0.4",
     "expo-symbols": "~56.0.5",
     "expo-system-ui": "~56.0.5",
@@ -28,7 +32,20 @@
     "react-native-worklets": "0.8.3"
   },
   "devDependencies": {
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.2.2",
+    "better-sqlite3": "^12.10.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~56.0.4",
+    "eslint-plugin-react-native": "^5.0.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-expo": "^56.0.4",
+    "lint-staged": "^17.0.5",
+    "prettier": "^3.8.3",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -37,7 +54,35 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint --max-warnings 0",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit",
+    "db:migrate": "node scripts/db-migrate.js",
+    "prepare": "husky"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@shopify/.*))"
+    ],
+    "moduleNameMapper": {
+      "^expo-sqlite$": "<rootDir>/__mocks__/expo-sqlite.js"
+    },
+    "collectCoverageFrom": [
+      "src/db/repositories/**/*.ts",
+      "src/db/migrations/runner.ts",
+      "src/services/**/*.ts"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "private": true
 }

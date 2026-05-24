@@ -48,7 +48,7 @@ CLAUDE.local.md
 
 # ===== Claude Code =====
 .claude/
-CLAUDE.md
+# CLAUDE.md
 
 # ===== Cursor =====
 .cursorrules
@@ -111,5 +111,3 @@ agent-cache/
 # ===== MCP / Tooling =====
 .mcp/
 mcp.config.json
-
-docs/
