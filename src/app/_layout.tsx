@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'exp
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AuthGate } from '@/components/auth-gate';
 import { DbContext } from '@/db/context';
@@ -39,19 +40,21 @@ export default function RootLayout(): React.JSX.Element | null {
   if (db === null) return null;
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <QueryClientProvider client={queryClient}>
-        <DbContext.Provider value={db}>
-          {authenticated ? (
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="add-transaction" options={{ presentation: 'modal' }} />
-            </Stack>
-          ) : (
-            <AuthGate onAuthenticated={() => setAuthenticated(true)} />
-          )}
-        </DbContext.Provider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <QueryClientProvider client={queryClient}>
+          <DbContext.Provider value={db}>
+            {authenticated ? (
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="add-transaction" options={{ presentation: 'modal' }} />
+              </Stack>
+            ) : (
+              <AuthGate onAuthenticated={() => setAuthenticated(true)} />
+            )}
+          </DbContext.Provider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

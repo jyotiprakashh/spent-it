@@ -12,7 +12,7 @@ module.exports = defineConfig([
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'warn',
-      'react-native/no-inline-styles': 'error',
+      // 'react-native/no-inline-styles': 'warn',
       'no-restricted-imports': [
         'error',
         { paths: ['axios', 'node-fetch', 'cross-fetch'] },

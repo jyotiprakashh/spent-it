@@ -3,7 +3,6 @@ import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/common/empty-state';
@@ -139,7 +138,7 @@ export default function TransactionsScreen(): React.JSX.Element {
   const bottomInset = BottomTabInset + insets.bottom;
 
   return (
-    <GestureHandlerRootView style={[styles.root, { backgroundColor: colors.background }]}>
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.one }]}>
         {selectedCategory !== null && (
           <View style={styles.drillRow}>
@@ -247,7 +246,7 @@ export default function TransactionsScreen(): React.JSX.Element {
           bottomInset={bottomInset + 64}
         />
       )}
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
