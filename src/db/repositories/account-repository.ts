@@ -114,6 +114,27 @@ export class AccountRepository extends BaseRepository {
     });
   }
 
+  async getNetWorth(): Promise<number> {
+    return this.execute(async () => {
+      const row = await this.db.getFirstAsync<{ net_worth: number }>(
+        `SELECT COALESCE(SUM(
+           a.opening_balance
+           + COALESCE(income.total, 0)
+           - COALESCE(expense.total, 0)
+         ), 0) AS net_worth
+         FROM accounts a
+         LEFT JOIN (SELECT account_id, SUM(amount) AS total FROM transactions
+                    WHERE type = 'income'  AND is_transfer = 0 GROUP BY account_id) income
+                ON income.account_id  = a.id
+         LEFT JOIN (SELECT account_id, SUM(amount) AS total FROM transactions
+                    WHERE type = 'expense' AND is_transfer = 0 GROUP BY account_id) expense
+                ON expense.account_id = a.id
+         WHERE a.is_archived = 0`,
+      );
+      return row?.net_worth ?? 0;
+    });
+  }
+
   async getRunningBalance(id: number): Promise<number> {
     return this.execute(async () => {
       const row = await this.db.getFirstAsync<{ current_balance: number }>(

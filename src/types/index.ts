@@ -49,6 +49,29 @@ export interface Transaction {
 
 export type NewTransaction = Omit<Transaction, 'id' | 'created_at' | 'updated_at'>;
 
+export interface TransactionWithCategory extends Transaction {
+  category_name: string;
+  category_icon: string;
+  category_color: string;
+  account_name: string;
+  account_color: string;
+}
+
+export interface TxnFilters {
+  yearMonth?: string;
+  type?: TxnType;
+  category_id?: number;
+  account_id?: number;
+  search?: string;
+}
+
+export type TxnCursor = { date: string; id: number } | null;
+
+export interface TxnPage {
+  rows: TransactionWithCategory[];
+  nextCursor: TxnCursor;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -102,4 +125,35 @@ export interface SpentItFile {
   salt: string;
   iv: string;
   data: string;
+}
+
+export interface MonthlySummary {
+  income: number;
+  expense: number;
+  net: number;
+}
+
+export interface CategorySpend {
+  category_id: number;
+  category_name: string;
+  category_icon: string;
+  category_color: string;
+  total: number;
+}
+
+export interface DailyTrendPoint {
+  date: string;
+  total: number;
+}
+
+export interface MonthlyComparisonPoint {
+  year_month: string;
+  income: number;
+  expense: number;
+}
+
+export interface YtdPoint {
+  month: number;
+  cum_income: number;
+  cum_expense: number;
 }

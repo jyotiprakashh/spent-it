@@ -344,3 +344,57 @@ describe('BaseRepository error translation', () => {
     });
   });
 });
+
+describe('AccountRepository.getNetWorth', () => {
+  it('returns opening_balance sum when no transactions exist', async () => {
+    await repo.create(makeAccount({ name: 'Savings', opening_balance: 1000 }));
+    await repo.create(makeAccount({ name: 'Bank', opening_balance: 500 }));
+    const nw = await repo.getNetWorth();
+    // Seed account "Cash Wallet" opening_balance = 0 + 1000 + 500
+    expect(nw).toBe(1500);
+  });
+
+  it('adds income and subtracts expense per account', async () => {
+    const id1 = await repo.create(makeAccount({ name: 'A', opening_balance: 100 }));
+    const id2 = await repo.create(makeAccount({ name: 'B', opening_balance: 0 }));
+    await db.runAsync(
+      `INSERT INTO transactions (amount, type, category_id, account_id, date, time, currency)
+       VALUES (?, 'income', 1, ?, '2026-05-01', '00:00', 'INR')`,
+      [500, id1],
+    );
+    await db.runAsync(
+      `INSERT INTO transactions (amount, type, category_id, account_id, date, time, currency)
+       VALUES (?, 'expense', 1, ?, '2026-05-02', '00:00', 'INR')`,
+      [200, id2],
+    );
+    const nw = await repo.getNetWorth();
+    // 0 (seed) + (100 + 500) + (0 - 200) = 400
+    expect(nw).toBe(400);
+  });
+
+  it('ignores transfer rows', async () => {
+    const id = await repo.create(makeAccount({ name: 'X', opening_balance: 0 }));
+    await db.runAsync(
+      `INSERT INTO transactions (amount, type, category_id, account_id, date, time, currency, is_transfer)
+       VALUES (?, 'income', 1, ?, '2026-05-01', '00:00', 'INR', 1)`,
+      [999, id],
+    );
+    const nw = await repo.getNetWorth();
+    expect(nw).toBe(0);
+  });
+
+  it('excludes archived accounts', async () => {
+    const id = await repo.create(
+      makeAccount({ name: 'Archived', opening_balance: 10000, is_archived: true }),
+    );
+    void id;
+    const nw = await repo.getNetWorth();
+    // Only Cash Wallet seed (0) counts
+    expect(nw).toBe(0);
+  });
+
+  it('returns 0 when all accounts are archived', async () => {
+    await db.runAsync(`UPDATE accounts SET is_archived = 1`);
+    expect(await repo.getNetWorth()).toBe(0);
+  });
+});

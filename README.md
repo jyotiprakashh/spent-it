@@ -28,6 +28,7 @@ SpentIt is a **100% offline**, privacy-first mobile expense tracker for iOS and 
 ## ✨ Features
 
 ### Core Tracking
+
 - Add expenses and income with category, payment method, date, and notes
 - Swipe to delete with a 5-second undo window
 - Full-text search across notes and category names
@@ -35,11 +36,13 @@ SpentIt is a **100% offline**, privacy-first mobile expense tracker for iOS and 
 - Recurring transactions (daily / weekly / monthly)
 
 ### Budgets
+
 - Set monthly spending budgets per category
 - Visual progress bars with alerts at 80% and 100% consumption
 - Overall monthly budget ceiling with net balance tracking
 
 ### Analytics
+
 - Spending donut chart broken down by category
 - Daily spending trend line for any month
 - 6-month bar chart comparison
@@ -47,12 +50,14 @@ SpentIt is a **100% offline**, privacy-first mobile expense tracker for iOS and 
 - Year-to-date income vs expense area chart
 
 ### Security & Privacy
+
 - Face ID / Touch ID / PIN lock on every launch
 - Auto-locks after 30 seconds in background (configurable)
 - AES-256 database encryption via SQLCipher
 - Encryption key stored in hardware secure enclave (iOS Keychain / Android Keystore)
 
 ### Backup & Restore
+
 - Export as encrypted `.spentit` file (AES-256 + passphrase)
 - Export as plain JSON or CSV
 - Native OS share sheet — save to iCloud Drive, Google Drive, email, USB
@@ -69,20 +74,20 @@ SpentIt is a **100% offline**, privacy-first mobile expense tracker for iOS and 
 
 ## 🛠 Tech Stack
 
-| Layer | Technology | Why |
-|---|---|---|
-| UI Framework | React Native 0.74 + Expo SDK 51 | Cross-platform, Expo managed workflow |
-| Navigation | Expo Router (file-based) | Typed routes, deep-link ready |
-| Database | expo-sqlite + SQLCipher | Local WAL-mode SQLite with AES-256 encryption |
-| State | Zustand + TanStack Query | UI state + async data layer with caching |
-| Charts | Victory Native XL | Skia-backed, 60fps SVG charts |
-| Lists | @shopify/flash-list | RecyclerView-backed, 60fps on large datasets |
-| Animations | Reanimated 3 | UI-thread animations, no JS bridge stutter |
-| Biometrics | expo-local-authentication | Face ID / Touch ID / system PIN |
-| Secure storage | expo-secure-store | Hardware-backed keychain |
-| File I/O | expo-file-system + expo-sharing | Local file write + OS share sheet |
-| Backup import | expo-document-picker | iCloud Drive / Google Drive / Files picker |
-| Build | EAS Build | App Store + Play Store CI/CD |
+| Layer          | Technology                      | Why                                           |
+| -------------- | ------------------------------- | --------------------------------------------- |
+| UI Framework   | React Native 0.74 + Expo SDK 51 | Cross-platform, Expo managed workflow         |
+| Navigation     | Expo Router (file-based)        | Typed routes, deep-link ready                 |
+| Database       | expo-sqlite + SQLCipher         | Local WAL-mode SQLite with AES-256 encryption |
+| State          | Zustand + TanStack Query        | UI state + async data layer with caching      |
+| Charts         | Victory Native XL               | Skia-backed, 60fps SVG charts                 |
+| Lists          | @shopify/flash-list             | RecyclerView-backed, 60fps on large datasets  |
+| Animations     | Reanimated 3                    | UI-thread animations, no JS bridge stutter    |
+| Biometrics     | expo-local-authentication       | Face ID / Touch ID / system PIN               |
+| Secure storage | expo-secure-store               | Hardware-backed keychain                      |
+| File I/O       | expo-file-system + expo-sharing | Local file write + OS share sheet             |
+| Backup import  | expo-document-picker            | iCloud Drive / Google Drive / Files picker    |
+| Build          | EAS Build                       | App Store + Play Store CI/CD                  |
 
 ---
 
@@ -142,30 +147,30 @@ yarn export:android    # EAS Build → .aab
 SpentIt follows a strict layered architecture. Each layer has one job and never reaches past its neighbours.
 
 ```
-┌─────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────┐
 │          Presentation Layer                      │
 │    Expo Router Screens + React Components        │
 │    (renders data, fires events — no SQL, no      │
 │     business logic)                              │
-├─────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────┤
 │          State Layer                             │
 │    Zustand (UI state) + TanStack Query           │
 │    (async cache, loading/error states)           │
-├─────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────┤
 │          Service Layer                           │
 │    AuthService · ExportService · ImportService   │
 │    BudgetAlertService                            │
 │    (business rules, orchestrates repositories)   │
-├─────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────┤
 │          Repository Layer                        │
 │    TransactionRepository · CategoryRepository    │
 │    BudgetRepository · SettingsRepository         │
 │    (all SQL lives here — nowhere else)           │
-├─────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────┤
 │          Database Layer                          │
 │    SQLite (WAL mode) · SQLCipher AES-256         │
 │    expo-sqlite async API                         │
-└─────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────┘
 ```
 
 ### Directory Structure
@@ -262,13 +267,13 @@ src/db/migrations/
 
 ### Threat Model
 
-| Threat | Mitigation |
-|---|---|
-| Physical device theft | SQLCipher AES-256 + OS full-disk encryption |
-| Key extraction from storage | Hardware-backed SecureStore, never AsyncStorage |
-| Backup file interception | `.spentit` files encrypted with user passphrase (PBKDF2-SHA256 + AES-256-GCM) |
-| Malicious import file | JSON schema validation + parameterised SQL inserts on all import paths |
-| SQL injection | Parameterised queries (`?` placeholders) enforced by code review and linting |
+| Threat                      | Mitigation                                                                    |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| Physical device theft       | SQLCipher AES-256 + OS full-disk encryption                                   |
+| Key extraction from storage | Hardware-backed SecureStore, never AsyncStorage                               |
+| Backup file interception    | `.spentit` files encrypted with user passphrase (PBKDF2-SHA256 + AES-256-GCM) |
+| Malicious import file       | JSON schema validation + parameterised SQL inserts on all import paths        |
+| SQL injection               | Parameterised queries (`?` placeholders) enforced by code review and linting  |
 
 ---
 
@@ -278,11 +283,11 @@ SpentIt delegates cloud storage entirely to the user — zero server costs, zero
 
 ### Export formats
 
-| Format | Extension | Encrypted | Use case |
-|---|---|---|---|
-| SpentIt Native | `.spentit` | ✅ AES-256 + passphrase | Full restore on new device |
-| JSON | `.json` | ❌ | Data portability, developer use |
-| CSV (zipped) | `.zip` | ❌ | Spreadsheet analysis |
+| Format         | Extension  | Encrypted               | Use case                        |
+| -------------- | ---------- | ----------------------- | ------------------------------- |
+| SpentIt Native | `.spentit` | ✅ AES-256 + passphrase | Full restore on new device      |
+| JSON           | `.json`    | ❌                      | Data portability, developer use |
+| CSV (zipped)   | `.zip`     | ❌                      | Spreadsheet analysis            |
 
 ### How it works
 
@@ -316,13 +321,13 @@ yarn test:coverage         # Coverage report
 
 ### Coverage gates (CI-enforced)
 
-| Layer | Minimum |
-|---|---|
-| `src/db/repositories/` | 90% |
-| `src/services/` | 80% |
-| `src/hooks/` | 70% |
-| `src/utils/` | 90% |
-| `src/components/` | 60% |
+| Layer                  | Minimum |
+| ---------------------- | ------- |
+| `src/db/repositories/` | 90%     |
+| `src/services/`        | 80%     |
+| `src/hooks/`           | 70%     |
+| `src/utils/`           | 90%     |
+| `src/components/`      | 60%     |
 
 Repository tests use in-memory SQLite (`:memory:`) — fast, isolated, no cleanup.  
 Service tests use `jest.fn()` mocked repositories.
@@ -337,14 +342,14 @@ This project ships with a full Claude Code configuration for AI-assisted develop
 
 Claude Code automatically delegates tasks to the right specialist:
 
-| Agent | Auto-triggers on |
-|---|---|
-| `db-architect` | Schema changes, migrations, query optimisation |
-| `security-auditor` | Crypto, auth, export/import, keychain code |
-| `rn-component-builder` | Screens, components, animations, dark mode |
-| `test-writer` | After any new function, class, or repository |
-| `performance-profiler` | Slow queries, render stutters, bundle size |
-| `export-import-specialist` | Backup formats, share sheet, restore flow |
+| Agent                      | Auto-triggers on                               |
+| -------------------------- | ---------------------------------------------- |
+| `db-architect`             | Schema changes, migrations, query optimisation |
+| `security-auditor`         | Crypto, auth, export/import, keychain code     |
+| `rn-component-builder`     | Screens, components, animations, dark mode     |
+| `test-writer`              | After any new function, class, or repository   |
+| `performance-profiler`     | Slow queries, render stutters, bundle size     |
+| `export-import-specialist` | Backup formats, share sheet, restore flow      |
 
 ### Slash commands (`.claude/commands/`)
 
@@ -379,6 +384,7 @@ Claude Code automatically delegates tasks to the right specialist:
 ## 📋 Roadmap
 
 **v1.0 — Foundation**
+
 - [x] Database layer (WAL + SQLCipher + migrations)
 - [x] Biometric auth gate
 - [ ] Transaction CRUD
@@ -387,6 +393,7 @@ Claude Code automatically delegates tasks to the right specialist:
 - [ ] Backup & restore
 
 **v2.0 — Backlog**
+
 - [ ] Receipt photo capture (local storage)
 - [ ] Recurring transaction automation
 - [ ] iOS Lock Screen / Android Home Screen widgets

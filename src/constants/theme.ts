@@ -9,48 +9,50 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text:               '#0C0C0C',
-    background:         '#FFFFFF',
-    backgroundElement:  '#F4F4F4',
+    text: '#0C0C0C',
+    background: '#FFFFFF',
+    backgroundElement: '#F4F4F4',
     backgroundSelected: '#E8FBF5',
-    textSecondary:      '#6B6B6B',
+    textSecondary: '#6B6B6B',
 
-    primary:            '#00D09C',
-    primarySubtle:      '#E0FAF3',
+    primary: '#00D09C',
+    primarySubtle: '#E0FAF3',
 
-    accent:             '#5367F5',
-    accentSubtle:       '#E5F4FD',
+    accent: '#444441',
+    accentSubtle: '#F1EFE8',
 
-    surface:            '#FFFFFF',
-    border:             '#EBEBEB',
+    surface: '#FFFFFF',
+    border: '#EBEBEB',
 
-    income:             '#00D09C',
-    expense:            '#F45B69',
-    warning:            '#F5A623',
-    error:              '#F45B69',
+    income: '#00D09C',
+    expense: '#F45B69',
+    warning: '#F5A623',
+    error: '#F45B69',
   },
   dark: {
-    text:               '#EFEFEF',
-    background:         '#0C0C0C',
-    backgroundElement:  '#181818',
+    text: '#EFEFEF',
+    background: '#0C0C0C',
+    backgroundElement: '#181818',
     backgroundSelected: '#0D2A22',
-    textSecondary:      '#8A8A8A',
+    textSecondary: '#8A8A8A',
 
-    primary:            '#00D09C',
-    primarySubtle:      '#0A2219',
+    primary: '#00D09C',
+    primarySubtle: '#0A2219',
 
-    accent:             '#7A8FFB',
-    accentSubtle:       '#1A1F3A',
+    accent: '#B4B2A9',
+    accentSubtle: '#1C1C1A',
 
-    surface:            '#111111',
-    border:             '#242424',
+    surface: '#111111',
+    border: '#242424',
 
-    income:             '#00D09C',
-    expense:            '#F45B69',
-    warning:            '#F5A623',
-    error:              '#F45B69',
+    income: '#00D09C',
+    expense: '#F45B69',
+    warning: '#F5A623',
+    error: '#F45B69',
   },
 } as const;
+
+export type ColorScheme = typeof Colors.light & typeof Colors.dark;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 

@@ -1,16 +1,22 @@
-import { DarkTheme, DefaultTheme, SplashScreen, ThemeProvider } from 'expo-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router';
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
-import AppTabs from '@/components/app-tabs';
 import { AuthGate } from '@/components/auth-gate';
+import { DbContext } from '@/db/context';
 import { openDatabase } from '@/db/init';
 import { runMigrations } from '@/db/migrations/runner';
-import { DbContext } from '@/db/context';
 import { AuthService } from '@/services/auth-service';
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 60_000, retry: 0, refetchOnWindowFocus: false },
+  },
+});
 
 export default function RootLayout(): React.JSX.Element | null {
   const colorScheme = useColorScheme();
@@ -34,13 +40,18 @@ export default function RootLayout(): React.JSX.Element | null {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {authenticated ? (
+      <QueryClientProvider client={queryClient}>
         <DbContext.Provider value={db}>
-          <AppTabs />
+          {authenticated ? (
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="add-transaction" options={{ presentation: 'modal' }} />
+            </Stack>
+          ) : (
+            <AuthGate onAuthenticated={() => setAuthenticated(true)} />
+          )}
         </DbContext.Provider>
-      ) : (
-        <AuthGate onAuthenticated={() => setAuthenticated(true)} />
-      )}
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
