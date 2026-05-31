@@ -52,7 +52,8 @@ export const Colors = {
   },
 } as const;
 
-export type ColorScheme = typeof Colors.light & typeof Colors.dark;
+type WidenStrings<T> = { -readonly [K in keyof T]: T[K] extends string ? string : T[K] };
+export type ColorScheme = WidenStrings<typeof Colors.light>;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 

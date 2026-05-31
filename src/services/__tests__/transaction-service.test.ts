@@ -36,8 +36,9 @@ describe('TransactionService.create', () => {
   it('delegates to repo when input valid', async () => {
     const repo = makeRepoMock();
     const svc = new TransactionService(repo);
-    const id = await svc.create(makeTxn());
-    expect(id).toBe(42);
+    const result = await svc.create(makeTxn());
+    expect(result.id).toBe(42);
+    expect(result.alerts).toEqual([]);
     expect(repo.create).toHaveBeenCalledTimes(1);
   });
 

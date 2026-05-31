@@ -207,3 +207,67 @@ describe('TransactionRepository.getPaginated', () => {
     expect(page.rows.every((r) => r.is_transfer === false)).toBe(true);
   });
 });
+
+describe('TransactionRepository.createTransferPair', () => {
+  beforeEach(async () => {
+    // Create a second account to transfer to.
+    await db.runAsync(
+      `INSERT INTO accounts (name, type, icon, color, opening_balance, currency, is_default, is_archived, sort_order)
+       VALUES ('Bank', 'bank', 'business-outline', '#4A90E2', 0, 'INR', 0, 0, 0)`,
+    );
+  });
+
+  it('creates two rows with linked transfer_pair_id and opposite types', async () => {
+    const transferCategoryId =
+      (await db.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE name = 'Transfer'`))
+        ?.id ?? -1;
+    expect(transferCategoryId).toBeGreaterThan(0);
+
+    const { fromId, toId } = await repo.createTransferPair({
+      fromAccountId: 1,
+      toAccountId: 2,
+      amount: 200,
+      date: '2026-05-10',
+      note: 'gift',
+      transferCategoryId,
+      currency: 'INR',
+    });
+    expect(fromId).toBeGreaterThan(0);
+    expect(toId).toBeGreaterThan(0);
+
+    const expense = await repo.findById(fromId);
+    const income = await repo.findById(toId);
+    expect(expense?.type).toBe('expense');
+    expect(income?.type).toBe('income');
+    expect(expense?.is_transfer).toBe(true);
+    expect(income?.is_transfer).toBe(true);
+    expect(expense?.transfer_pair_id).toBe(toId);
+    expect(income?.transfer_pair_id).toBe(fromId);
+    expect(expense?.amount).toBe(200);
+    expect(income?.amount).toBe(200);
+  });
+});
+
+describe('TransactionRepository.deleteTransferPair', () => {
+  it('deletes both legs of a transfer atomically', async () => {
+    await db.runAsync(
+      `INSERT INTO accounts (name, type, icon, color, opening_balance, currency, is_default, is_archived, sort_order)
+       VALUES ('Bank', 'bank', 'business-outline', '#4A90E2', 0, 'INR', 0, 0, 0)`,
+    );
+    const transferCategoryId =
+      (await db.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE name = 'Transfer'`))
+        ?.id ?? -1;
+    const { fromId, toId } = await repo.createTransferPair({
+      fromAccountId: 1,
+      toAccountId: 2,
+      amount: 50,
+      date: '2026-05-10',
+      note: null,
+      transferCategoryId,
+      currency: 'INR',
+    });
+    await repo.deleteTransferPair(fromId);
+    expect(await repo.findById(fromId)).toBeNull();
+    expect(await repo.findById(toId)).toBeNull();
+  });
+});

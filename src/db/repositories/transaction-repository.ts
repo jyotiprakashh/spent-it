@@ -324,6 +324,80 @@ export class TransactionRepository extends BaseRepository {
     });
   }
 
+  async createTransferPair(input: {
+    fromAccountId: number;
+    toAccountId: number;
+    amount: number;
+    date: string;
+    note: string | null;
+    transferCategoryId: number;
+    currency: string;
+  }): Promise<{ fromId: number; toId: number }> {
+    return this.execute(async () => {
+      let fromId = 0;
+      let toId = 0;
+      await this.db.withTransactionAsync(async () => {
+        const expense = await this.db.runAsync(
+          `INSERT INTO transactions
+             (amount, type, category_id, account_id, payment_method_id,
+              note, date, time, currency, receipt_uri,
+              is_recurring, recurrence_rule, is_transfer, transfer_pair_id)
+           VALUES (?, 'expense', ?, ?, NULL, ?, ?, '00:00', ?, NULL, 0, NULL, 1, NULL)`,
+          [
+            input.amount,
+            input.transferCategoryId,
+            input.fromAccountId,
+            input.note,
+            input.date,
+            input.currency,
+          ],
+        );
+        fromId = expense.lastInsertRowId;
+
+        const income = await this.db.runAsync(
+          `INSERT INTO transactions
+             (amount, type, category_id, account_id, payment_method_id,
+              note, date, time, currency, receipt_uri,
+              is_recurring, recurrence_rule, is_transfer, transfer_pair_id)
+           VALUES (?, 'income', ?, ?, NULL, ?, ?, '00:00', ?, NULL, 0, NULL, 1, ?)`,
+          [
+            input.amount,
+            input.transferCategoryId,
+            input.toAccountId,
+            input.note,
+            input.date,
+            input.currency,
+            fromId,
+          ],
+        );
+        toId = income.lastInsertRowId;
+
+        await this.db.runAsync(`UPDATE transactions SET transfer_pair_id = ? WHERE id = ?`, [
+          toId,
+          fromId,
+        ]);
+      });
+      return { fromId, toId };
+    });
+  }
+
+  async deleteTransferPair(id: number): Promise<void> {
+    return this.execute(async () => {
+      await this.db.withTransactionAsync(async () => {
+        const row = await this.db.getFirstAsync<{ transfer_pair_id: number | null }>(
+          `SELECT transfer_pair_id FROM transactions WHERE id = ? AND is_transfer = 1`,
+          [id],
+        );
+        if (row === null) return;
+        const pairId = row.transfer_pair_id;
+        await this.db.runAsync(`DELETE FROM transactions WHERE id = ?`, [id]);
+        if (pairId !== null) {
+          await this.db.runAsync(`DELETE FROM transactions WHERE id = ?`, [pairId]);
+        }
+      });
+    });
+  }
+
   async getYearToDate(year: number, accountId: number | null = null): Promise<YtdPoint[]> {
     return this.execute(async () => {
       return this.db.getAllAsync<YtdPoint>(

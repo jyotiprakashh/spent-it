@@ -157,3 +157,30 @@ export interface YtdPoint {
   cum_income: number;
   cum_expense: number;
 }
+
+export interface BudgetAlertResult {
+  id: string;
+  level: AlertLevel;
+  category_id: number | null;
+  category_name: string;
+  spent: number;
+  budget: number;
+  pct: number;
+}
+
+export interface AccountErrorRow {
+  id: number;
+  message: string;
+  stack: string | null;
+  context: string | null;
+  occurred_at: string;
+}
+
+export type ThemePreference = 'system' | 'light' | 'dark';
+export type LockTimeoutSeconds = 15 | 30 | 60 | 300 | -1;
+
+export interface NewAppError {
+  message: string;
+  stack?: string | null;
+  context?: string | null;
+}

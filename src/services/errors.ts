@@ -7,3 +7,10 @@ export class ValidationError extends Error {
     this.field = field;
   }
 }
+
+export class OperationNotPermittedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'OperationNotPermittedError';
+  }
+}

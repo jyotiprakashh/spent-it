@@ -22,7 +22,7 @@ async function getUserVersion(db: SQLiteDatabase): Promise<number> {
 // ---------------------------------------------------------------------------
 
 describe('runMigrations', () => {
-  it('sets PRAGMA user_version to 1 after first run on a fresh database', async () => {
+  it('sets PRAGMA user_version to 2 after first run on a fresh database', async () => {
     // Arrange
     const db = await freshDb();
 
@@ -31,12 +31,12 @@ describe('runMigrations', () => {
 
     // Assert
     const version = await getUserVersion(db);
-    expect(version).toBe(1);
+    expect(version).toBe(2);
 
     await db.closeAsync();
   });
 
-  it('seeds exactly 15 categories', async () => {
+  it('seeds exactly 16 categories (15 from v001 + Transfer from v002)', async () => {
     // Arrange
     const db = await freshDb();
     await runMigrations(db);
@@ -45,8 +45,29 @@ describe('runMigrations', () => {
     const row = await db.getFirstAsync<{ cnt: number }>('SELECT COUNT(*) AS cnt FROM categories');
 
     // Assert
-    expect(row?.cnt).toBe(15);
+    expect(row?.cnt).toBe(16);
 
+    await db.closeAsync();
+  });
+
+  it('seeds the Transfer system category in v002', async () => {
+    const db = await freshDb();
+    await runMigrations(db);
+    const row = await db.getFirstAsync<{ is_system: number }>(
+      `SELECT is_system FROM categories WHERE name = 'Transfer'`,
+    );
+    expect(row?.is_system).toBe(1);
+    await db.closeAsync();
+  });
+
+  it('creates the app_errors table in v002', async () => {
+    const db = await freshDb();
+    await runMigrations(db);
+    await db.runAsync(`INSERT INTO app_errors (message) VALUES (?)`, ['test']);
+    const row = await db.getFirstAsync<{ message: string }>(
+      `SELECT message FROM app_errors LIMIT 1`,
+    );
+    expect(row?.message).toBe('test');
     await db.closeAsync();
   });
 
@@ -82,7 +103,7 @@ describe('runMigrations', () => {
     await db.closeAsync();
   });
 
-  it('is idempotent: calling twice does not throw and version stays at 1', async () => {
+  it('is idempotent: calling twice does not throw and version stays at 2', async () => {
     // Arrange
     const db = await freshDb();
     await runMigrations(db);
@@ -92,7 +113,7 @@ describe('runMigrations', () => {
 
     // Assert
     const version = await getUserVersion(db);
-    expect(version).toBe(1);
+    expect(version).toBe(2);
 
     await db.closeAsync();
   });
@@ -107,7 +128,7 @@ describe('runMigrations', () => {
     // Apply the real migration first so the schema exists
     await runMigrations(db);
     const versionBefore = await getUserVersion(db);
-    expect(versionBefore).toBe(1);
+    expect(versionBefore).toBe(2);
 
     // Build a temporary migrations list that only contains a hypothetical v2
     // migration that does NOT exist yet – simulating "nothing pending"
@@ -127,7 +148,7 @@ describe('runMigrations', () => {
     const versionAfter = await getUserVersion(db);
 
     expect(countAfter).toBe(countBefore);
-    expect(versionAfter).toBe(1);
+    expect(versionAfter).toBe(2);
 
     await db.closeAsync();
   });

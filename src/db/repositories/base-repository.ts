@@ -1,5 +1,7 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { OperationNotPermittedError, ValidationError } from '@/services/errors';
+
 export class DatabaseError extends Error {
   public readonly code: string;
 
@@ -19,8 +21,10 @@ export const DB_ERROR_CODES = {
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[keyof typeof DB_ERROR_CODES];
 
-function translateError(err: unknown): DatabaseError {
+function translateError(err: unknown): Error {
   if (err instanceof DatabaseError) return err;
+  if (err instanceof OperationNotPermittedError) return err;
+  if (err instanceof ValidationError) return err;
 
   const message = err instanceof Error ? err.message : String(err);
 

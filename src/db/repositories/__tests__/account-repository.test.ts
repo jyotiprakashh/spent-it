@@ -178,10 +178,11 @@ describe('AccountRepository.getRunningBalance', () => {
     expect(balance).toBe(700);
   });
 
-  it('ignores transfer transactions (is_transfer = 1)', async () => {
+  it('includes transfer transactions in balance (transfers move money)', async () => {
     // Arrange
     const id = await repo.create(makeAccount({ name: 'Transfer Account', opening_balance: 200 }));
-    // This income transaction is a transfer – must NOT affect running balance
+    // A transfer income row arrives — balance must increase by it.
+    // Transfers are excluded from analytics (spending), not from balance.
     await db.runAsync(
       `INSERT INTO transactions
          (amount, type, category_id, account_id, date, time, currency, is_transfer)
@@ -192,8 +193,8 @@ describe('AccountRepository.getRunningBalance', () => {
     // Act
     const balance = await repo.getRunningBalance(id);
 
-    // Assert: still 200 – transfer is excluded
-    expect(balance).toBe(200);
+    // Assert: 200 + 500 = 700
+    expect(balance).toBe(700);
   });
 
   it('returns 0 for a non-existent account id', async () => {
@@ -372,12 +373,19 @@ describe('AccountRepository.getNetWorth', () => {
     expect(nw).toBe(400);
   });
 
-  it('ignores transfer rows', async () => {
-    const id = await repo.create(makeAccount({ name: 'X', opening_balance: 0 }));
+  it('paired transfer legs net to zero across accounts', async () => {
+    // Two accounts, one transfer pair — expense on A, income on B — should net to 0.
+    const a = await repo.create(makeAccount({ name: 'A', opening_balance: 0 }));
+    const b = await repo.create(makeAccount({ name: 'B', opening_balance: 0 }));
+    await db.runAsync(
+      `INSERT INTO transactions (amount, type, category_id, account_id, date, time, currency, is_transfer)
+       VALUES (?, 'expense', 1, ?, '2026-05-01', '00:00', 'INR', 1)`,
+      [999, a],
+    );
     await db.runAsync(
       `INSERT INTO transactions (amount, type, category_id, account_id, date, time, currency, is_transfer)
        VALUES (?, 'income', 1, ?, '2026-05-01', '00:00', 'INR', 1)`,
-      [999, id],
+      [999, b],
     );
     const nw = await repo.getNetWorth();
     expect(nw).toBe(0);
@@ -396,5 +404,27 @@ describe('AccountRepository.getNetWorth', () => {
   it('returns 0 when all accounts are archived', async () => {
     await db.runAsync(`UPDATE accounts SET is_archived = 1`);
     expect(await repo.getNetWorth()).toBe(0);
+  });
+});
+
+describe('AccountRepository.getTransactionCount', () => {
+  it('returns 0 for an account with no transactions', async () => {
+    expect(await repo.getTransactionCount(1)).toBe(0);
+  });
+
+  it('counts both income and expense rows', async () => {
+    await db.runAsync(
+      `INSERT INTO transactions
+         (amount, type, category_id, account_id, payment_method_id, note, date, time, currency,
+          receipt_uri, is_recurring, recurrence_rule, is_transfer, transfer_pair_id)
+       VALUES (100, 'expense', 1, 1, NULL, NULL, '2026-05-10', '00:00', 'INR', NULL, 0, NULL, 0, NULL)`,
+    );
+    await db.runAsync(
+      `INSERT INTO transactions
+         (amount, type, category_id, account_id, payment_method_id, note, date, time, currency,
+          receipt_uri, is_recurring, recurrence_rule, is_transfer, transfer_pair_id)
+       VALUES (500, 'income', 14, 1, NULL, NULL, '2026-05-11', '00:00', 'INR', NULL, 0, NULL, 0, NULL)`,
+    );
+    expect(await repo.getTransactionCount(1)).toBe(2);
   });
 });

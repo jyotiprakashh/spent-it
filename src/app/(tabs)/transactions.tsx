@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EmptyState } from '@/components/common/empty-state';
 import { Fab } from '@/components/common/fab';
 import { IconButton } from '@/components/common/icon-button';
+import { TabScreen } from '@/components/common/tab-screen';
 import { AccountFilterChips } from '@/components/transactions/account-filter-chips';
 import { SearchBar } from '@/components/transactions/search-bar';
 import { SwipeableRow } from '@/components/transactions/swipeable-row';
@@ -29,7 +30,7 @@ export default function TransactionsScreen(): React.JSX.Element {
   const colors = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ category_id?: string }>();
+  const params = useLocalSearchParams<{ category_id?: string; account_id?: string }>();
 
   const [accountId, setAccountId] = useState<number | null>(null);
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -37,21 +38,27 @@ export default function TransactionsScreen(): React.JSX.Element {
   const [searchInput, setSearchInput] = useState('');
   const debouncedSearch = useDebounce(searchInput, 300);
 
-  // Apply drill-down param on mount (or when it changes via navigation).
+  // Apply drill-down params on mount (or when they change via navigation).
   // Deferred via microtask so setState doesn't fire synchronously inside the effect.
   useEffect(() => {
-    const raw = typeof params.category_id === 'string' ? params.category_id : null;
-    if (raw === null) return;
-    const id = parseInt(raw, 10);
-    if (!Number.isFinite(id)) return;
+    const rawCat = typeof params.category_id === 'string' ? params.category_id : null;
+    const rawAcc = typeof params.account_id === 'string' ? params.account_id : null;
     let cancelled = false;
     void Promise.resolve().then(() => {
-      if (!cancelled) setCategoryId(id);
+      if (cancelled) return;
+      if (rawCat !== null) {
+        const id = parseInt(rawCat, 10);
+        if (Number.isFinite(id)) setCategoryId(id);
+      }
+      if (rawAcc !== null) {
+        const id = parseInt(rawAcc, 10);
+        if (Number.isFinite(id)) setAccountId(id);
+      }
     });
     return () => {
       cancelled = true;
     };
-  }, [params.category_id]);
+  }, [params.category_id, params.account_id]);
 
   const filters = useMemo<TxnFilters>(
     () => ({
@@ -138,7 +145,7 @@ export default function TransactionsScreen(): React.JSX.Element {
   const bottomInset = BottomTabInset + insets.bottom;
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <TabScreen>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.one }]}>
         {selectedCategory !== null && (
           <View style={styles.drillRow}>
@@ -246,7 +253,7 @@ export default function TransactionsScreen(): React.JSX.Element {
           bottomInset={bottomInset + 64}
         />
       )}
-    </View>
+    </TabScreen>
   );
 }
 

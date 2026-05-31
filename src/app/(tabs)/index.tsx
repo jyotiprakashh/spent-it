@@ -4,6 +4,8 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Fab } from '@/components/common/fab';
+import { TabScreen } from '@/components/common/tab-screen';
+import { BackupReminderBanner } from '@/components/backup/backup-reminder-banner';
 import { AccountBalanceList } from '@/components/dashboard/account-balance-list';
 import { BalanceCard } from '@/components/dashboard/balance-card';
 import { MonthSelector } from '@/components/dashboard/month-selector';
@@ -12,11 +14,9 @@ import { RecentTransactions } from '@/components/dashboard/recent-transactions';
 import { SpendingDonut } from '@/components/dashboard/spending-donut';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 import { useDashboard } from '@/hooks/use-dashboard';
-import { useTheme } from '@/hooks/use-theme';
 import { currentYearMonth } from '@/utils/date';
 
 export default function DashboardScreen(): React.JSX.Element {
-  const colors = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -27,7 +27,7 @@ export default function DashboardScreen(): React.JSX.Element {
   const bottomInset = BottomTabInset + insets.bottom;
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <TabScreen>
       <View style={[styles.headerSticky, { paddingTop: insets.top + Spacing.one }]}>
         <MonthSelector value={yearMonth} onChange={setYearMonth} />
       </View>
@@ -36,6 +36,8 @@ export default function DashboardScreen(): React.JSX.Element {
         contentContainerStyle={[styles.scroll, { paddingBottom: bottomInset + Spacing.six }]}
         showsVerticalScrollIndicator={false}
       >
+        <BackupReminderBanner />
+
         <View style={styles.section}>
           <NetWorthCard value={data.netWorth} />
         </View>
@@ -67,7 +69,7 @@ export default function DashboardScreen(): React.JSX.Element {
         accessibilityLabel="Add transaction"
         bottomInset={bottomInset}
       />
-    </View>
+    </TabScreen>
   );
 }
 

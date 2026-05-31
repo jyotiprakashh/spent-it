@@ -1,21 +1,38 @@
-import { useEffect, useState } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
+import { useSyncExternalStore } from 'react';
+import { useColorScheme as useRNColorScheme, type ColorSchemeName } from 'react-native';
 
-/**
- * To support static rendering, this value needs to be re-calculated on the client side for web
- */
-export function useColorScheme() {
-  const [hasHydrated, setHasHydrated] = useState(false);
+// On web, useRNColorScheme can return values inconsistent with the server-rendered
+// markup. We subscribe to a single mount event via useSyncExternalStore so the
+// hook returns 'light' until React hydrates, then the actual scheme afterwards.
+// This avoids the react-hooks/set-state-in-effect lint rule.
 
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
+let isHydrated = false;
+const listeners = new Set<() => void>();
 
-  const colorScheme = useRNColorScheme();
-
-  if (hasHydrated) {
-    return colorScheme;
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  if (!isHydrated && typeof window !== 'undefined') {
+    queueMicrotask(() => {
+      if (isHydrated) return;
+      isHydrated = true;
+      for (const l of listeners) l();
+    });
   }
+  return () => {
+    listeners.delete(listener);
+  };
+}
 
-  return 'light';
+function getSnapshot(): boolean {
+  return isHydrated;
+}
+
+function getServerSnapshot(): boolean {
+  return false;
+}
+
+export function useColorScheme(): ColorSchemeName {
+  const hydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const colorScheme = useRNColorScheme();
+  return hydrated ? colorScheme : 'light';
 }

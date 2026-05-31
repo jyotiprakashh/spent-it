@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { TabScreen } from '@/components/common/tab-screen';
 import { ChartCard } from '@/components/analytics/chart-card';
 import { DailyTrendChart } from '@/components/analytics/daily-trend-chart';
 import { MonthlyBarChart } from '@/components/analytics/monthly-bar-chart';
@@ -10,11 +11,9 @@ import { MonthSelector } from '@/components/dashboard/month-selector';
 import { SpendingDonut } from '@/components/dashboard/spending-donut';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 import { useAnalytics } from '@/hooks/use-analytics';
-import { useTheme } from '@/hooks/use-theme';
 import { currentYearMonth } from '@/utils/date';
 
 export default function AnalyticsScreen(): React.JSX.Element {
-  const colors = useTheme();
   const insets = useSafeAreaInsets();
 
   const [yearMonth, setYearMonth] = useState<string>(currentYearMonth());
@@ -28,7 +27,7 @@ export default function AnalyticsScreen(): React.JSX.Element {
   const ytdEmpty = data.ytd.every((y) => y.cum_income === 0 && y.cum_expense === 0);
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <TabScreen>
       <View style={[styles.headerSticky, { paddingTop: insets.top + Spacing.one }]}>
         <MonthSelector value={yearMonth} onChange={setYearMonth} />
       </View>
@@ -74,7 +73,7 @@ export default function AnalyticsScreen(): React.JSX.Element {
           <SpendingDonut data={data.byCategory} isLoading={data.isLoading} />
         </View>
       </ScrollView>
-    </View>
+    </TabScreen>
   );
 }
 

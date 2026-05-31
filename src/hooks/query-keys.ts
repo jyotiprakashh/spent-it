@@ -24,4 +24,11 @@ export const qk = {
     ['analytics', 'monthly', endYearMonth, accountId] as const,
   analyticsYtd: (year: number, accountId: number | null) =>
     ['analytics', 'ytd', year, accountId] as const,
+  budgets: () => ['budgets'] as const,
+  budgetsForMonth: (year: number, month: number) => ['budgets', year, month] as const,
+  budgetForCategory: (categoryId: number | null, year: number, month: number | null) =>
+    ['budgets', 'category', categoryId, year, month] as const,
+  accountTransactionCount: (id: number) => ['accounts', 'tx_count', id] as const,
+  errorLog: (limit: number) => ['app_errors', limit] as const,
+  backupReminder: () => ['backup_reminder'] as const,
 } as const;

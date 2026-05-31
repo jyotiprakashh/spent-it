@@ -11,9 +11,17 @@ import {
 import { useMemo } from 'react';
 
 import { useDb } from '@/db/context';
+import { BudgetRepository } from '@/db/repositories/budget-repository';
+import { CategoryRepository } from '@/db/repositories/category-repository';
 import { TransactionRepository } from '@/db/repositories/transaction-repository';
-import { TransactionService } from '@/services/transaction-service';
-import type { NewTransaction, Transaction, TxnFilters, TxnPage } from '@/types';
+import { BudgetAlertService } from '@/services/budget-alert-service';
+import {
+  TransactionService,
+  type SaveTransactionResult,
+  type UpdateTransactionResult,
+} from '@/services/transaction-service';
+import { useAlertStore } from '@/stores/alert-store';
+import type { BudgetAlertResult, NewTransaction, Transaction, TxnFilters, TxnPage } from '@/types';
 
 import { qk } from './query-keys';
 
@@ -51,36 +59,66 @@ export function useTransaction(id: number | null): UseQueryResult<Transaction | 
 
 function useTransactionService(): TransactionService {
   const db = useDb();
-  return useMemo(() => new TransactionService(new TransactionRepository(db)), [db]);
+  return useMemo(() => {
+    const txnRepo = new TransactionRepository(db);
+    const budgetRepo = new BudgetRepository(db);
+    const categoryRepo = new CategoryRepository(db);
+    const alerts = new BudgetAlertService(budgetRepo, txnRepo, categoryRepo);
+    return new TransactionService(txnRepo, alerts);
+  }, [db]);
 }
 
 function useInvalidateTxnQueries(): () => Promise<void> {
   const client = useQueryClient();
   return async () => {
-    await client.invalidateQueries({ queryKey: qk.transactionsRoot() });
-    await client.invalidateQueries({ queryKey: qk.accounts() });
+    await Promise.all([
+      client.invalidateQueries({ queryKey: qk.transactionsRoot() }),
+      client.invalidateQueries({ queryKey: qk.accounts() }),
+      client.invalidateQueries({ queryKey: qk.dashboardRoot() }),
+      client.invalidateQueries({ queryKey: qk.analyticsRoot() }),
+      client.invalidateQueries({ queryKey: qk.budgets() }),
+    ]);
   };
 }
 
-export function useCreateTransaction(): UseMutationResult<number, Error, NewTransaction> {
+function pushAlerts(alerts: BudgetAlertResult[]): void {
+  const push = useAlertStore.getState().push;
+  for (const alert of alerts) push(alert);
+}
+
+export function useCreateTransaction(): UseMutationResult<
+  SaveTransactionResult,
+  Error,
+  NewTransaction
+> {
   const service = useTransactionService();
   const invalidate = useInvalidateTxnQueries();
-  return useMutation<number, Error, NewTransaction>({
+  return useMutation<SaveTransactionResult, Error, NewTransaction>({
     mutationFn: (input) => service.create(input),
-    onSuccess: () => invalidate(),
+    onSuccess: async (result) => {
+      await invalidate();
+      pushAlerts(result.alerts);
+    },
   });
 }
 
 export function useUpdateTransaction(): UseMutationResult<
-  void,
+  UpdateTransactionResult,
   Error,
   { id: number; patch: Partial<NewTransaction> }
 > {
   const service = useTransactionService();
   const invalidate = useInvalidateTxnQueries();
-  return useMutation<void, Error, { id: number; patch: Partial<NewTransaction> }>({
+  return useMutation<
+    UpdateTransactionResult,
+    Error,
+    { id: number; patch: Partial<NewTransaction> }
+  >({
     mutationFn: ({ id, patch }) => service.update(id, patch),
-    onSuccess: () => invalidate(),
+    onSuccess: async (result) => {
+      await invalidate();
+      pushAlerts(result.alerts);
+    },
   });
 }
 

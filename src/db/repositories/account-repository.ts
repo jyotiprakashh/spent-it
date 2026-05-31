@@ -56,6 +56,8 @@ export class AccountRepository extends BaseRepository {
 
   async getAll(): Promise<AccountWithBalance[]> {
     return this.execute(async () => {
+      // Includes transfer rows so account balances reflect inter-account movement.
+      // Analytics queries exclude is_transfer separately so transfers stay out of spending.
       const rows = await this.db.getAllAsync<AccountRow & BalanceRow>(
         `SELECT
            a.*,
@@ -64,7 +66,7 @@ export class AccountRepository extends BaseRepository {
            - COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0)
            AS current_balance
          FROM accounts a
-         LEFT JOIN transactions t ON t.account_id = a.id AND t.is_transfer = 0
+         LEFT JOIN transactions t ON t.account_id = a.id
          WHERE a.is_archived = 0
          GROUP BY a.id
          ORDER BY a.sort_order ASC, a.name ASC`,
@@ -116,6 +118,8 @@ export class AccountRepository extends BaseRepository {
 
   async getNetWorth(): Promise<number> {
     return this.execute(async () => {
+      // Net worth includes transfer rows so paired transfers cancel out (one
+      // expense + one income on different accounts = zero net effect).
       const row = await this.db.getFirstAsync<{ net_worth: number }>(
         `SELECT COALESCE(SUM(
            a.opening_balance
@@ -124,14 +128,24 @@ export class AccountRepository extends BaseRepository {
          ), 0) AS net_worth
          FROM accounts a
          LEFT JOIN (SELECT account_id, SUM(amount) AS total FROM transactions
-                    WHERE type = 'income'  AND is_transfer = 0 GROUP BY account_id) income
+                    WHERE type = 'income' GROUP BY account_id) income
                 ON income.account_id  = a.id
          LEFT JOIN (SELECT account_id, SUM(amount) AS total FROM transactions
-                    WHERE type = 'expense' AND is_transfer = 0 GROUP BY account_id) expense
+                    WHERE type = 'expense' GROUP BY account_id) expense
                 ON expense.account_id = a.id
          WHERE a.is_archived = 0`,
       );
       return row?.net_worth ?? 0;
+    });
+  }
+
+  async getTransactionCount(id: number): Promise<number> {
+    return this.execute(async () => {
+      const row = await this.db.getFirstAsync<{ n: number }>(
+        `SELECT COUNT(*) AS n FROM transactions WHERE account_id = ?`,
+        [id],
+      );
+      return row?.n ?? 0;
     });
   }
 
@@ -144,7 +158,7 @@ export class AccountRepository extends BaseRepository {
            - COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0)
            AS current_balance
          FROM accounts a
-         LEFT JOIN transactions t ON t.account_id = a.id AND t.is_transfer = 0
+         LEFT JOIN transactions t ON t.account_id = a.id
          WHERE a.id = ?
          GROUP BY a.id`,
         [id],
