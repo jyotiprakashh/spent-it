@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" viewport="700x320" name="Form controls" subtitle="Input, SearchBar, Switch, SegmentedControl, Chip" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  body { margin: 0; font-family: var(--font-display); background: var(--surface-page); color: var(--text-primary); }
+  #root { padding: var(--space-four); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-four); }
+  .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; color: var(--text-secondary); margin-bottom: var(--space-two); }
+  .row { display: flex; align-items: center; gap: var(--space-three); flex-wrap: wrap; }
+  .stack { display: flex; flex-direction: column; gap: var(--space-three); }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { Input, SearchBar, Switch, SegmentedControl, Chip } = window.SpentItDesignSystem_767bfa;
+    function Demo() {
+      const [type, setType] = React.useState('expense');
+      const [on, setOn] = React.useState(true);
+      const [chip, setChip] = React.useState('cash');
+      const [q, setQ] = React.useState('Coffee');
+      const [note, setNote] = React.useState('');
+      return (
+        <React.Fragment>
+          <div className="stack">
+            <div><div className="lbl">Input</div><Input leadingIcon="pencil" placeholder="Add a note" value={note} onChange={e=>setNote(e.target.value)} /></div>
+            <div><div className="lbl">Search</div><SearchBar value={q} onChange={e=>setQ(e.target.value)} onClose={()=>setQ('')} /></div>
+          </div>
+          <div className="stack">
+            <div><div className="lbl">Segmented</div>
+              <SegmentedControl value={type} onChange={setType}
+                options={[{value:'expense',label:'Expense',tone:'expense'},{value:'income',label:'Income',tone:'income'}]} />
+            </div>
+            <div><div className="lbl">Switch & chips</div>
+              <div className="row">
+                <Switch checked={on} onChange={setOn} />
+                <Chip label="Cash" icon="wallet" selected={chip==='cash'} onClick={()=>setChip('cash')} />
+                <Chip label="Card" icon="banknote" selected={chip==='card'} onClick={()=>setChip('card')} />
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+  </script>
+</body>
+</html>

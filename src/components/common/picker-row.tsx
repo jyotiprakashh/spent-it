@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export interface PickerOption<K extends string | number> {
@@ -79,9 +79,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   subtitle: {
     fontSize: 12,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
 });

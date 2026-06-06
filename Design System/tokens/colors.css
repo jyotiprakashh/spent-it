@@ -1,0 +1,75 @@
+/* ============================================================
+   SpentIt — Color tokens
+   Source of truth: src/constants/theme.ts (Colors.light / Colors.dark)
+   Monochrome neutrals + a single green primary (#00D09C).
+   Semantic income/expense/warning kept minimal.
+   ============================================================ */
+
+:root {
+  /* ---- Brand primary (the one accent) ---- */
+  --green-500: #00d09c;   /* primary — income, FAB, active, links */
+  --green-600: #00b88a;   /* pressed / hover-darken */
+  --green-400: #2fdbb0;   /* hover-lighten */
+  --green-subtle: #e0faf3; /* primarySubtle — tinted fills, selected rows */
+  --green-selected: #e8fbf5; /* backgroundSelected */
+
+  /* ---- Neutral ramp (light) ---- */
+  --ink-900: #0c0c0c;     /* text */
+  --ink-600: #444441;     /* accent (warm charcoal) */
+  --ink-500: #6b6b6b;     /* textSecondary */
+  --surface-0: #ffffff;   /* background / surface / card group */
+  --surface-1: #f4f4f4;   /* backgroundElement — cards, keypad, chips */
+  --surface-accent: #f1efe8; /* accentSubtle — warm neutral fill */
+  --line: #ebebeb;        /* border / hairline */
+
+  /* ---- Semantic ---- */
+  --income: #00d09c;
+  --expense: #f45b69;
+  --warning: #f5a623;
+  --error: #f45b69;
+
+  /* ---- Semantic aliases (consume these in components) ---- */
+  --color-primary: var(--green-500);
+  --color-primary-press: var(--green-600);
+  --color-primary-subtle: var(--green-subtle);
+
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-accent: var(--ink-600);
+  --text-on-primary: #ffffff;
+
+  --surface-page: var(--surface-0);
+  --surface-card: var(--surface-1);
+  --surface-raised: var(--surface-0);
+  --surface-selected: var(--green-selected);
+
+  --border-subtle: var(--line);
+
+  /* ---- Elevation (the only shadow in the system — the FAB) ---- */
+  --shadow-fab: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, 0.10);
+}
+
+/* ============================================================
+   Dark theme — apply on a [data-theme="dark"] scope.
+   Source: Colors.dark
+   ============================================================ */
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  --ink-900: #efefef;
+  --ink-600: #b4b2a9;
+  --ink-500: #8a8a8a;
+  --surface-0: #0c0c0c;
+  --surface-1: #181818;
+  --surface-accent: #1c1c1a;
+  --line: #242424;
+
+  --green-subtle: #0a2219;
+  --green-selected: #0d2a22;
+
+  --text-on-primary: #0c0c0c;
+  --surface-raised: #111111;
+
+  --shadow-fab: 0 4px 8px rgba(0, 0, 0, 0.45);
+  --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, 0.5);
+}

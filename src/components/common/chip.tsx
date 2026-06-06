@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ChipProps = {
@@ -62,5 +62,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

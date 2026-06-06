@@ -1,5 +1,6 @@
 import { StyleSheet, Text, type TextStyle } from 'react-native';
 
+import { Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type SectionTitleProps = {
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 11,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },

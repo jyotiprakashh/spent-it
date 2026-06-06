@@ -1,0 +1,28 @@
+<!-- @dsCard group="Spacing" viewport="700x150" name="Spacing scale" subtitle="4px base, named steps (half → six)" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; font-family: var(--font-display); background: var(--surface-page); color: var(--text-primary); }
+  .wrap { padding: var(--space-three); display: flex; gap: var(--space-three); align-items: flex-end; }
+  .b { display: flex; flex-direction: column; align-items: center; gap: var(--space-two); }
+  .box { background: var(--green-500); border-radius: 3px; width: 100%; }
+  .b .n { font-size: var(--text-caption); font-weight: var(--weight-semibold); }
+  .b .v { font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono); }
+  .col { flex: 1; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="b col"><div class="box" style="height:2px"></div><span class="n">half</span><span class="v">2</span></div>
+    <div class="b col"><div class="box" style="height:4px"></div><span class="n">one</span><span class="v">4</span></div>
+    <div class="b col"><div class="box" style="height:8px"></div><span class="n">two</span><span class="v">8</span></div>
+    <div class="b col"><div class="box" style="height:16px"></div><span class="n">three</span><span class="v">16</span></div>
+    <div class="b col"><div class="box" style="height:24px"></div><span class="n">four</span><span class="v">24</span></div>
+    <div class="b col"><div class="box" style="height:32px"></div><span class="n">five</span><span class="v">32</span></div>
+    <div class="b col"><div class="box" style="height:64px"></div><span class="n">six</span><span class="v">64</span></div>
+  </div>
+</body>
+</html>

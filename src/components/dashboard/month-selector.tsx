@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { addMonths, currentYearMonth, formatYearMonth, isFutureMonth } from '@/utils/date';
 
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
     letterSpacing: -0.2,
     minWidth: 130,
     textAlign: 'center',

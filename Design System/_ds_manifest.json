@@ -1,0 +1,639 @@
+{
+  "namespace": "SpentItDesignSystem_767bfa",
+  "components": [
+    { "name": "AccountCard", "sourcePath": "components/core/AccountCard.jsx" },
+    { "name": "Badge", "sourcePath": "components/core/Badge.jsx" },
+    { "name": "Button", "sourcePath": "components/core/Button.jsx" },
+    { "name": "Card", "sourcePath": "components/core/Card.jsx" },
+    { "name": "Chip", "sourcePath": "components/core/Chip.jsx" },
+    { "name": "EmptyState", "sourcePath": "components/core/EmptyState.jsx" },
+    { "name": "Fab", "sourcePath": "components/core/Fab.jsx" },
+    { "name": "Icon", "sourcePath": "components/core/Icon.jsx" },
+    { "name": "ICON_NAMES", "sourcePath": "components/core/Icon.jsx" },
+    { "name": "ICON_ALIASES", "sourcePath": "components/core/Icon.jsx" },
+    { "name": "IconButton", "sourcePath": "components/core/IconButton.jsx" },
+    { "name": "Input", "sourcePath": "components/core/Input.jsx" },
+    { "name": "ListRow", "sourcePath": "components/core/ListRow.jsx" },
+    { "name": "Money", "sourcePath": "components/core/Money.jsx" },
+    { "name": "ProgressBar", "sourcePath": "components/core/ProgressBar.jsx" },
+    { "name": "SearchBar", "sourcePath": "components/core/SearchBar.jsx" },
+    { "name": "SectionTitle", "sourcePath": "components/core/SectionTitle.jsx" },
+    { "name": "SegmentedControl", "sourcePath": "components/core/SegmentedControl.jsx" },
+    { "name": "Switch", "sourcePath": "components/core/Switch.jsx" },
+    { "name": "SwitchRow", "sourcePath": "components/core/SwitchRow.jsx" },
+    { "name": "TransactionRow", "sourcePath": "components/core/TransactionRow.jsx" }
+  ],
+  "startingPoints": [
+    {
+      "name": "Button",
+      "path": "components/core/Button.jsx",
+      "previewPath": "components/core/buttons.card.html",
+      "kind": "component",
+      "section": "Core",
+      "subtitle": "Primary / secondary / ghost / danger action",
+      "viewport": "700x120"
+    },
+    {
+      "name": "ListRow",
+      "path": "components/core/ListRow.jsx",
+      "previewPath": "components/core/buttons.card.html",
+      "kind": "component",
+      "section": "Lists",
+      "subtitle": "Settings/list row with tinted icon",
+      "viewport": "700x80"
+    },
+    {
+      "name": "spentit-app-v2",
+      "path": "ui_kits/spentit-app-v2/index.html",
+      "previewPath": "ui_kits/spentit-app-v2/index.html",
+      "kind": "screen",
+      "section": "SpentIt App",
+      "subtitle": "SpentIt v2 — interactive mobile app mockup",
+      "viewport": "460x820"
+    }
+  ],
+  "cards": [
+    {
+      "path": "guidelines/brand-iconography.card.html",
+      "group": "Brand",
+      "viewport": "700x200",
+      "subtitle": "Lucide outline set in tinted circles",
+      "name": "Iconography"
+    },
+    {
+      "path": "guidelines/brand-logo.card.html",
+      "group": "Brand",
+      "viewport": "700x200",
+      "subtitle": "The wallet mark on green; lockup",
+      "name": "Logo & app icon"
+    },
+    {
+      "path": "guidelines/color-dark.card.html",
+      "group": "Colors",
+      "viewport": "700x150",
+      "subtitle": "The same tokens on a #0C0C0C canvas",
+      "name": "Dark theme"
+    },
+    {
+      "path": "guidelines/color-neutrals.card.html",
+      "group": "Colors",
+      "viewport": "700x170",
+      "subtitle": "Monochrome ink ramp & surfaces (light)",
+      "name": "Neutrals"
+    },
+    {
+      "path": "guidelines/color-primary.card.html",
+      "group": "Colors",
+      "viewport": "700x150",
+      "subtitle": "The single accent — #00D09C and its states",
+      "name": "Primary green"
+    },
+    {
+      "path": "guidelines/color-semantic.card.html",
+      "group": "Colors",
+      "viewport": "700x150",
+      "subtitle": "Income, expense, warning — used sparingly",
+      "name": "Semantic"
+    },
+    {
+      "path": "components/core/buttons.card.html",
+      "group": "Components",
+      "viewport": "700x300",
+      "subtitle": "Variants, sizes, icons, disabled — plus IconButton",
+      "name": "Buttons"
+    },
+    {
+      "path": "components/core/data.card.html",
+      "group": "Components",
+      "viewport": "700x260",
+      "subtitle": "AccountCard, ProgressBar, EmptyState, Fab",
+      "name": "Data & feedback"
+    },
+    {
+      "path": "components/core/forms.card.html",
+      "group": "Components",
+      "viewport": "700x320",
+      "subtitle": "Input, SearchBar, Switch, SegmentedControl, Chip",
+      "name": "Form controls"
+    },
+    {
+      "path": "components/core/money.card.html",
+      "group": "Components",
+      "viewport": "700x230",
+      "subtitle": "Money tones, SectionTitle, Badge",
+      "name": "Money & labels"
+    },
+    {
+      "path": "components/core/rows.card.html",
+      "group": "Components",
+      "viewport": "700x320",
+      "subtitle": "ListRow, SwitchRow & TransactionRow in grouped cards",
+      "name": "Rows"
+    },
+    {
+      "path": "guidelines/spacing-radii.card.html",
+      "group": "Spacing",
+      "viewport": "700x150",
+      "subtitle": "Soft corners; one shadow (the FAB)",
+      "name": "Radii & elevation"
+    },
+    {
+      "path": "guidelines/spacing-scale.card.html",
+      "group": "Spacing",
+      "viewport": "700x150",
+      "subtitle": "4px base, named steps (half → six)",
+      "name": "Spacing scale"
+    },
+    {
+      "path": "ui_kits/spentit-app/index.html",
+      "group": "SpentIt App",
+      "viewport": "460x760",
+      "subtitle": "Interactive: onboarding → dashboard, add, transactions, analytics, settings",
+      "name": "SpentIt — mobile app"
+    },
+    {
+      "path": "ui_kits/spentit-app-v2/index.html",
+      "group": "SpentIt App v2",
+      "viewport": "460x820",
+      "subtitle": "Cleaner UI: white cards, monochrome icons, tighter type, minimal chrome",
+      "name": "SpentIt v2 — Redesign"
+    },
+    {
+      "path": "guidelines/type-display.card.html",
+      "group": "Type",
+      "viewport": "700x180",
+      "subtitle": "The product's single typeface",
+      "name": "Spline Sans"
+    },
+    {
+      "path": "guidelines/type-money.card.html",
+      "group": "Type",
+      "viewport": "700x160",
+      "subtitle": "Numerals: -0.2 tracking, color-coded by direction",
+      "name": "Money"
+    },
+    {
+      "path": "guidelines/type-scale.card.html",
+      "group": "Type",
+      "viewport": "700x300",
+      "subtitle": "Eight sizes, mirrored from the app",
+      "name": "Scale"
+    }
+  ],
+  "globalCssPaths": [
+    "tokens/fonts.css",
+    "tokens/colors.css",
+    "tokens/typography.css",
+    "tokens/spacing.css",
+    "styles.css"
+  ],
+  "tokens": [
+    {
+      "name": "--green-500",
+      "value": "#00d09c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--green-600",
+      "value": "#00b88a",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--green-400",
+      "value": "#2fdbb0",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--green-subtle",
+      "value": "#e0faf3",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--green-selected",
+      "value": "#e8fbf5",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--ink-900", "value": "#0c0c0c", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--ink-600", "value": "#444441", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--ink-500", "value": "#6b6b6b", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--surface-0",
+      "value": "#ffffff",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-1",
+      "value": "#f4f4f4",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-accent",
+      "value": "#f1efe8",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--line", "value": "#ebebeb", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--income", "value": "#00d09c", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--expense", "value": "#f45b69", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--warning", "value": "#f5a623", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--error", "value": "#f45b69", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--color-primary",
+      "value": "var(--green-500)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--color-primary-press",
+      "value": "var(--green-600)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--color-primary-subtle",
+      "value": "var(--green-subtle)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--text-primary",
+      "value": "var(--ink-900)",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--text-secondary",
+      "value": "var(--ink-500)",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--text-accent",
+      "value": "var(--ink-600)",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--text-on-primary",
+      "value": "#ffffff",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-page",
+      "value": "var(--surface-0)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-card",
+      "value": "var(--surface-1)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-raised",
+      "value": "var(--surface-0)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-selected",
+      "value": "var(--green-selected)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--border-subtle",
+      "value": "var(--line)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--shadow-fab",
+      "value": "0 4px 8px rgba(0, 0, 0, 0.15)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--shadow-sheet",
+      "value": "0 -8px 30px rgba(0, 0, 0, 0.10)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--ink-900",
+      "value": "#efefef",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--ink-600",
+      "value": "#b4b2a9",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--ink-500",
+      "value": "#8a8a8a",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--surface-0",
+      "value": "#0c0c0c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--surface-1",
+      "value": "#181818",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--surface-accent",
+      "value": "#1c1c1a",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--line",
+      "value": "#242424",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--green-subtle",
+      "value": "#0a2219",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--green-selected",
+      "value": "#0d2a22",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--text-on-primary",
+      "value": "#0c0c0c",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--surface-raised",
+      "value": "#111111",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--shadow-fab",
+      "value": "0 4px 8px rgba(0, 0, 0, 0.45)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--shadow-sheet",
+      "value": "0 -8px 30px rgba(0, 0, 0, 0.5)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css",
+      "scope": ":root[data-theme='dark']"
+    },
+    {
+      "name": "--font-display",
+      "value": "'Spline Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--font-mono",
+      "value": "'Spline Sans Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-regular",
+      "value": "400",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-medium",
+      "value": "500",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-semibold",
+      "value": "600",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-bold",
+      "value": "700",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-heavy",
+      "value": "800",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-overline",
+      "value": "11px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-caption",
+      "value": "12px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-footnote",
+      "value": "13px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-body",
+      "value": "15px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-callout",
+      "value": "17px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-title",
+      "value": "22px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-display",
+      "value": "28px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--text-amount",
+      "value": "30px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-tight",
+      "value": "1.1",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-snug",
+      "value": "1.25",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-normal",
+      "value": "1.45",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-overline",
+      "value": "0.6px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-money",
+      "value": "-0.2px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-normal",
+      "value": "0",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--space-half",
+      "value": "2px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    { "name": "--space-one", "value": "4px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-two", "value": "8px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    {
+      "name": "--space-three",
+      "value": "16px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--space-four",
+      "value": "24px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--space-five",
+      "value": "32px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--space-six",
+      "value": "64px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    { "name": "--radius-sm", "value": "10px", "kind": "radius", "definedIn": "tokens/spacing.css" },
+    { "name": "--radius-md", "value": "12px", "kind": "radius", "definedIn": "tokens/spacing.css" },
+    { "name": "--radius-lg", "value": "14px", "kind": "radius", "definedIn": "tokens/spacing.css" },
+    { "name": "--radius-xl", "value": "20px", "kind": "radius", "definedIn": "tokens/spacing.css" },
+    {
+      "name": "--radius-pill",
+      "value": "999px",
+      "kind": "radius",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--icon-tint-sm",
+      "value": "34px",
+      "kind": "color",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--icon-tint-md",
+      "value": "40px",
+      "kind": "color",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--icon-tint-lg",
+      "value": "72px",
+      "kind": "color",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--control-fab",
+      "value": "56px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    {
+      "name": "--control-key-h",
+      "value": "56px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    { "name": "--hit-min", "value": "44px", "kind": "spacing", "definedIn": "tokens/spacing.css" }
+  ],
+  "themes": [{ "selector": ":root[data-theme='dark']", "label": "Root Dark" }],
+  "fonts": [],
+  "brandFonts": [
+    {
+      "family": "Spline Sans",
+      "status": "ok",
+      "tokens": ["--font-display"],
+      "path": "tokens/typography.css"
+    },
+    {
+      "family": "Spline Sans Mono",
+      "status": "ok",
+      "tokens": ["--font-mono"],
+      "path": "tokens/typography.css"
+    }
+  ],
+  "source": "spa"
+}

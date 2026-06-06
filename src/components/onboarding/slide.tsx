@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type SlideProps = {
@@ -42,11 +42,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: '700',
+    fontFamily: Fonts.bold,
     textAlign: 'center',
   },
   body: {
     fontSize: 15,
+    fontFamily: Fonts.regular,
     lineHeight: 22,
     textAlign: 'center',
   },

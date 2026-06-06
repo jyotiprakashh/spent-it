@@ -1,0 +1,5 @@
+/* SpentIt webfonts.
+ * Spline Sans is the product's display typeface (declared in the app's global.css
+ * as --font-display). Loaded here from Google Fonts so consumers pick it up via
+ * the single styles.css import. This is the REAL product font — not a substitute. */
+@import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap');

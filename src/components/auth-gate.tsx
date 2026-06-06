@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { Colors, Spacing } from '@/constants/theme';
+import { Colors, Fonts, Spacing } from '@/constants/theme';
 
 type AuthGateProps = {
   onAuthenticated: () => void;
@@ -95,10 +95,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 15,
+    fontFamily: Fonts.regular,
   },
   indicator: {
     marginTop: Spacing.four,
@@ -113,5 +115,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

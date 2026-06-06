@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Money } from '@/components/common/money';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { AccountWithBalance } from '@/types';
 
@@ -80,10 +80,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   type: {
     fontSize: 11,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
     textTransform: 'capitalize',
   },
 });

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ListRowProps = {
@@ -102,10 +102,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   subtitle: {
     fontSize: 12,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
   trailing: {
     flexDirection: 'row',
@@ -114,5 +116,6 @@ const styles = StyleSheet.create({
   trailingText: {
     fontSize: 13,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
 });

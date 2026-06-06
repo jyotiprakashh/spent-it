@@ -1,0 +1,26 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Primary green" subtitle="The single accent — #00D09C and its states" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; font-family: var(--font-display); background: var(--surface-page); color: var(--text-primary); }
+  .wrap { display: flex; gap: var(--space-three); padding: var(--space-three); }
+  .sw { flex: 1; display: flex; flex-direction: column; gap: var(--space-two); }
+  .chip { height: 64px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); }
+  .meta { display: flex; flex-direction: column; gap: 1px; }
+  .name { font-size: var(--text-footnote); font-weight: var(--weight-semibold); }
+  .hex { font-size: var(--text-caption); color: var(--text-secondary); font-family: var(--font-mono); text-transform: uppercase; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="sw"><div class="chip" style="background:var(--green-500)"></div><div class="meta"><span class="name">Primary</span><span class="hex">#00D09C</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--green-600)"></div><div class="meta"><span class="name">Pressed</span><span class="hex">#00B88A</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--green-400)"></div><div class="meta"><span class="name">Hover</span><span class="hex">#2FDBB0</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--green-subtle)"></div><div class="meta"><span class="name">Subtle</span><span class="hex">#E0FAF3</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--green-selected)"></div><div class="meta"><span class="name">Selected</span><span class="hex">#E8FBF5</span></div></div>
+  </div>
+</body>
+</html>

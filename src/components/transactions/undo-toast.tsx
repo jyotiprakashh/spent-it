@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type UndoToastProps = {
@@ -76,10 +76,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
   action: {
     fontSize: 14,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     letterSpacing: 0.6,
   },
 });

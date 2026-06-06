@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Card } from '@/components/common/card';
 import { Money } from '@/components/common/money';
 import { SectionTitle } from '@/components/common/section-title';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { MonthlySummary } from '@/types';
 
@@ -58,5 +58,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
 });

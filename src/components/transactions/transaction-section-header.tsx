@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { formatRelativeDate } from '@/utils/format';
 
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },

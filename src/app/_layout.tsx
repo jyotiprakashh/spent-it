@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router';
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { useEffect, useState } from 'react';
@@ -32,6 +33,13 @@ export default function RootLayout(): React.JSX.Element | null {
   const authenticated = useAuthStore((s) => s.authenticated);
   const setAuthenticated = useAuthStore((s) => s.setAuthenticated);
 
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular: require('../../assets/fonts/Inter-Regular.ttf'),
+    Inter_500Medium: require('../../assets/fonts/Inter-Medium.ttf'),
+    Inter_600SemiBold: require('../../assets/fonts/Inter-SemiBold.ttf'),
+    Inter_700Bold: require('../../assets/fonts/Inter-Bold.ttf'),
+  });
+
   useEffect(() => {
     void (async () => {
       try {
@@ -40,13 +48,17 @@ export default function RootLayout(): React.JSX.Element | null {
         await runMigrations(database);
         configureErrorLogger(new ErrorRepository(database));
         setDb(database);
-      } finally {
-        await SplashScreen.hideAsync();
+      } catch {
+        // error already logged via configureErrorLogger
       }
     })();
   }, []);
 
-  if (db === null) return null;
+  useEffect(() => {
+    if (db !== null && fontsLoaded) void SplashScreen.hideAsync();
+  }, [db, fontsLoaded]);
+
+  if (db === null || !fontsLoaded) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

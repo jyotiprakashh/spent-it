@@ -1,7 +1,15 @@
 import { StyleSheet, Text, type TextStyle } from 'react-native';
 
+import { Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { formatCurrency } from '@/utils/format';
+
+function weightToFamily(w: TextStyle['fontWeight']): string {
+  if (w === '700' || w === 'bold' || w === '800' || w === '900') return Fonts.bold;
+  if (w === '600') return Fonts.semibold;
+  if (w === '500') return Fonts.medium;
+  return Fonts.regular;
+}
 
 export type MoneyProps = {
   value: number;
@@ -33,7 +41,10 @@ export function Money({
   const prefix = signed && value > 0 ? '+' : '';
   return (
     <Text
-      style={[styles.text, { color, fontSize: size, fontWeight: weight }]}
+      style={[
+        styles.text,
+        { color, fontSize: size, fontWeight: weight, fontFamily: weightToFamily(weight) },
+      ]}
       numberOfLines={1}
       accessibilityLabel={`${prefix}${formatCurrency(value, currency)}`}
     >

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type EmptyStateProps = {
@@ -44,9 +44,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   subtitle: {
     fontSize: 14,
+    fontFamily: Fonts.regular,
     textAlign: 'center',
   },
 });

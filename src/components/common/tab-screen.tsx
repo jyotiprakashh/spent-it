@@ -1,4 +1,4 @@
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { StyleSheet, type ViewProps } from 'react-native';
 
 import { useTheme } from '@/hooks/use-theme';
@@ -13,7 +13,6 @@ export function TabScreen({ children, style, ...rest }: TabScreenProps): React.J
   return (
     <Animated.View
       entering={FadeIn.duration(160)}
-      exiting={FadeOut.duration(120)}
       style={[styles.root, { backgroundColor: colors.background }, style]}
       {...rest}
     >

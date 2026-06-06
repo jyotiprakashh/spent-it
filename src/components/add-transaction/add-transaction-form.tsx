@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useAccounts } from '@/hooks/use-accounts';
 import { useActiveCategories } from '@/hooks/use-categories';
@@ -268,13 +268,16 @@ const styles = StyleSheet.create({
   },
   headerAction: {
     fontSize: 15,
+    fontFamily: Fonts.regular,
   },
   headerSave: {
     fontWeight: '700',
+    fontFamily: Fonts.bold,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   scroll: {
     paddingBottom: Spacing.three,
@@ -288,6 +291,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 44,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     letterSpacing: -1,
   },
   section: {
@@ -297,6 +301,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 11,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     paddingHorizontal: Spacing.three,

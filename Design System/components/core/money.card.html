@@ -1,0 +1,58 @@
+<!-- @dsCard group="Components" viewport="700x230" name="Money & labels" subtitle="Money tones, SectionTitle, Badge" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  body { margin: 0; font-family: var(--font-display); background: var(--surface-page); color: var(--text-primary); }
+  #root { padding: var(--space-four); display: flex; flex-direction: column; gap: var(--space-four); }
+  .row { display: flex; align-items: center; gap: var(--space-four); flex-wrap: wrap; }
+  .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; color: var(--text-secondary); margin-bottom: var(--space-two); }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { Money, SectionTitle, Badge } = window.SpentItDesignSystem_767bfa;
+    function Demo() {
+      return (
+        <React.Fragment>
+          <div>
+            <div className="lbl">Money</div>
+            <div className="row">
+              <Money value={84320} size={30} weight={700} />
+              <Money value={12400} tone="income" size={17} signed />
+              <Money value={-8150} tone="expense" size={17} signed />
+              <Money value={540} tone="muted" size={15} />
+            </div>
+          </div>
+          <div>
+            <div className="lbl">Section titles</div>
+            <div className="row">
+              <SectionTitle>This Month</SectionTitle>
+              <SectionTitle>Recent</SectionTitle>
+              <SectionTitle>Spending</SectionTitle>
+            </div>
+          </div>
+          <div>
+            <div className="lbl">Badges</div>
+            <div className="row">
+              <Badge>12</Badge>
+              <Badge tone="primary">Recurring</Badge>
+              <Badge tone="income">Income</Badge>
+              <Badge tone="expense">Over</Badge>
+              <Badge tone="warning">80%</Badge>
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+  </script>
+</body>
+</html>

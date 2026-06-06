@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Money } from '@/components/common/money';
 import { ProgressBar } from '@/components/common/progress-bar';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type BudgetRowProps = {
@@ -98,10 +98,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   pct: {
     fontSize: 12,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   amounts: {
     flexDirection: 'row',

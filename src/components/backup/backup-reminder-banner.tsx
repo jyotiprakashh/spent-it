@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useBackupReminder, useBannerDismiss } from '@/hooks/use-backup-reminder';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -73,9 +73,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 13,
     fontWeight: '700',
+    fontFamily: Fonts.bold,
   },
   subtitle: {
     fontSize: 11,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
 });

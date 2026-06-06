@@ -1,0 +1,26 @@
+<!-- @dsCard group="Colors" viewport="700x170" name="Neutrals" subtitle="Monochrome ink ramp & surfaces (light)" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; font-family: var(--font-display); background: var(--surface-page); color: var(--text-primary); }
+  .wrap { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-two); padding: var(--space-three); }
+  .sw { display: flex; flex-direction: column; gap: var(--space-two); }
+  .chip { height: 60px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); }
+  .name { font-size: var(--text-caption); font-weight: var(--weight-semibold); }
+  .hex { font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono); text-transform: uppercase; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="sw"><div class="chip" style="background:var(--ink-900)"></div><span class="name">Text</span><span class="hex">0C0C0C</span></div>
+    <div class="sw"><div class="chip" style="background:var(--ink-600)"></div><span class="name">Accent</span><span class="hex">444441</span></div>
+    <div class="sw"><div class="chip" style="background:var(--ink-500)"></div><span class="name">Secondary</span><span class="hex">6B6B6B</span></div>
+    <div class="sw"><div class="chip" style="background:var(--surface-1)"></div><span class="name">Card</span><span class="hex">F4F4F4</span></div>
+    <div class="sw"><div class="chip" style="background:var(--surface-accent)"></div><span class="name">Warm</span><span class="hex">F1EFE8</span></div>
+    <div class="sw"><div class="chip" style="background:var(--surface-0)"></div><span class="name">Page</span><span class="hex">FFFFFF</span></div>
+  </div>
+</body>
+</html>

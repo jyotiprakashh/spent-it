@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Money } from '@/components/common/money';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { TransactionWithCategory } from '@/types';
 
@@ -70,9 +70,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
   subtitle: {
     fontSize: 13,
+    fontFamily: Fonts.regular,
     marginTop: 1,
   },
 });

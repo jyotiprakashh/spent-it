@@ -9,7 +9,7 @@ import { Card } from '@/components/common/card';
 import { EmptyState } from '@/components/common/empty-state';
 import { Money } from '@/components/common/money';
 import { SectionTitle } from '@/components/common/section-title';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { CategorySpend } from '@/types';
 
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 11,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
@@ -192,10 +193,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
   },
   legendPct: {
     fontSize: 12,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
     minWidth: 36,
     textAlign: 'right',
   },

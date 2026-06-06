@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 const MAX_INT_DIGITS = 10;
@@ -90,5 +90,6 @@ const styles = StyleSheet.create({
   keyText: {
     fontSize: 22,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

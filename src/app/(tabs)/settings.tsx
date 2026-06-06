@@ -7,7 +7,7 @@ import { ListRow } from '@/components/common/list-row';
 import { SwitchRow } from '@/components/common/switch-row';
 import { TabScreen } from '@/components/common/tab-screen';
 import { Section } from '@/components/settings/section';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Spacing } from '@/constants/theme';
 import {
   useBiometricEnabled,
   useCurrency,
@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: '700',
+    fontFamily: Fonts.bold,
   },
   scroll: {
     gap: Spacing.three,
