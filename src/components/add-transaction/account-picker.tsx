@@ -38,5 +38,6 @@ const styles = StyleSheet.create({
   list: {
     gap: Spacing.two,
     paddingHorizontal: Spacing.three,
+    paddingBottom: Spacing.two,
   },
 });

@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabScreen } from '@/components/common/tab-screen';
 import { BudgetSection } from '@/components/analytics/budget-section';
 import { ChartCard } from '@/components/analytics/chart-card';
-import { DailyTrendChart } from '@/components/analytics/daily-trend-chart';
 import { MonthlyBarChart } from '@/components/analytics/monthly-bar-chart';
 import { YtdAreaChart } from '@/components/analytics/ytd-area-chart';
 import { MonthSelector } from '@/components/dashboard/month-selector';
@@ -57,7 +56,6 @@ export default function AnalyticsScreen(): React.JSX.Element {
     return Math.round(((income - expense) / income) * 100);
   }, [income, expense]);
 
-  const dailyEmpty = data.daily.every((d) => d.total === 0);
   const monthlyEmpty = data.monthly.every((m) => m.income === 0 && m.expense === 0);
   const ytdEmpty = data.ytd.every((y) => y.cum_income === 0 && y.cum_expense === 0);
 
@@ -90,18 +88,6 @@ export default function AnalyticsScreen(): React.JSX.Element {
             value={savingsRate !== null ? `${savingsRate}%` : '—'}
             color={savingsRate !== null && savingsRate >= 0 ? colors.income : colors.expense}
           />
-        </View>
-
-        <View style={styles.section}>
-          <ChartCard
-            title="Daily Spend"
-            subtitle="Tap & hold to see amount"
-            isLoading={data.isLoading}
-            isEmpty={!data.isLoading && dailyEmpty}
-            height={190}
-          >
-            <DailyTrendChart data={data.daily} />
-          </ChartCard>
         </View>
 
         <View style={styles.section}>

@@ -66,7 +66,7 @@ export function YtdAreaChart({ data }: YtdAreaChartProps): React.JSX.Element {
           hideDataPoints1
           hideDataPoints2
           noOfSections={4}
-          width={chartWidth - 60}
+          width={chartWidth}
           height={180}
           xAxisThickness={0}
           yAxisThickness={0}

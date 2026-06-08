@@ -1,7 +1,7 @@
 import type { SettingsRepository } from '@/db/repositories/settings-repository';
 import { SETTING_KEYS } from '@/services/settings-service';
 
-const REMIND_AFTER_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const REMIND_AFTER_MS = 30 * 24 * 60 * 60 * 1000; // 1 month
 
 export class BackupReminderService {
   private readonly settings: SettingsRepository;

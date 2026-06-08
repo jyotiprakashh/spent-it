@@ -57,7 +57,7 @@ export function SpendingTrendChart({
               areaChart
               curved
               data={chartData}
-              width={chartWidth - 60}
+              width={chartWidth}
               height={140}
               color={colors.primary}
               startFillColor={`${colors.primary}55`}

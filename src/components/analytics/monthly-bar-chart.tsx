@@ -78,7 +78,7 @@ export function MonthlyBarChart({
           barWidth={12}
           roundedTop
           noOfSections={4}
-          width={chartWidth - 60}
+          width={chartWidth}
           height={180}
           xAxisThickness={0}
           yAxisThickness={0}

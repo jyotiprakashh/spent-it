@@ -108,6 +108,7 @@ export function SpendingDonut({
               donut
               innerRadius={70}
               radius={110}
+              innerCircleColor={colors.background}
               onPress={(item: PieItem) => handlePress(item.sliceId)}
               centerLabelComponent={() => (
                 <View style={styles.center}>
