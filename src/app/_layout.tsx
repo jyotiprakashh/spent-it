@@ -6,7 +6,10 @@ import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { Colors } from '@/constants/theme';
+
 import { AuthGate } from '@/components/auth-gate';
+import { TransactionDrawer } from '@/components/add-transaction/transaction-drawer';
 import { BudgetAlertBanner } from '@/components/budgets/budget-alert-banner';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { LockController } from '@/components/lock-controller';
@@ -70,27 +73,84 @@ export default function RootLayout(): React.JSX.Element | null {
                 <>
                   <LockController />
                   <OnboardingGate />
-                  <Stack screenOptions={{ headerShown: false }}>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      contentStyle: {
+                        backgroundColor:
+                          colorScheme === 'dark' ? Colors.dark.background : Colors.light.background,
+                      },
+                    }}
+                  >
                     <Stack.Screen name="(tabs)" />
                     <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
-                    <Stack.Screen name="add-transaction" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="account-edit" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="category-edit" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="budget-edit" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="transfer" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="settings/accounts" />
-                    <Stack.Screen name="settings/categories" />
-                    <Stack.Screen name="settings/budgets" />
-                    <Stack.Screen name="settings/currency" />
-                    <Stack.Screen name="settings/theme" />
-                    <Stack.Screen name="settings/lock-timeout" />
-                    <Stack.Screen name="settings/error-log" />
-                    <Stack.Screen name="settings/backup" />
-                    <Stack.Screen name="settings/restore" />
-                    <Stack.Screen name="settings/backup-preview" />
-                    <Stack.Screen name="backup-passphrase" options={{ presentation: 'modal' }} />
+                    <Stack.Screen
+                      name="add-transaction"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
+                    <Stack.Screen
+                      name="account-edit"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
+                    <Stack.Screen
+                      name="category-edit"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
+                    <Stack.Screen
+                      name="budget-edit"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
+                    <Stack.Screen
+                      name="transfer"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
+                    <Stack.Screen
+                      name="settings/accounts"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/categories"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/budgets"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/currency"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/theme"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/lock-timeout"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/error-log"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/backup"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/restore"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="settings/backup-preview"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    <Stack.Screen
+                      name="backup-passphrase"
+                      options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+                    />
                   </Stack>
                   <BudgetAlertBanner />
+                  <TransactionDrawer />
                 </>
               ) : (
                 <AuthGate onAuthenticated={() => setAuthenticated(true)} />

@@ -3,7 +3,13 @@ import { useMemo } from 'react';
 
 import { useDb } from '@/db/context';
 import { TransactionRepository } from '@/db/repositories/transaction-repository';
-import type { CategorySpend, DailyTrendPoint, MonthlyComparisonPoint, YtdPoint } from '@/types';
+import type {
+  CategorySpend,
+  DailyTrendPoint,
+  MonthlyComparisonPoint,
+  MonthlySummary,
+  YtdPoint,
+} from '@/types';
 import { yearOf } from '@/utils/date';
 
 import { qk } from './query-keys';
@@ -13,6 +19,7 @@ export type AnalyticsData = {
   monthly: MonthlyComparisonPoint[];
   ytd: YtdPoint[];
   byCategory: CategorySpend[];
+  summary: MonthlySummary | undefined;
   isLoading: boolean;
   isError: boolean;
 };
@@ -40,14 +47,19 @@ export function useAnalytics(opts: { yearMonth: string; accountId: number | null
         queryKey: qk.dashboardByCategory(opts.yearMonth, opts.accountId),
         queryFn: () => repo.getSpendingByCategory(opts.yearMonth, opts.accountId),
       },
+      {
+        queryKey: qk.analyticsSummary(opts.yearMonth, opts.accountId),
+        queryFn: () => repo.getMonthlySummary(opts.yearMonth, opts.accountId),
+      },
     ],
     combine: (results): AnalyticsData => {
-      const [dailyR, monthlyR, ytdR, byCategoryR] = results;
+      const [dailyR, monthlyR, ytdR, byCategoryR, summaryR] = results;
       return {
         daily: (dailyR.data as DailyTrendPoint[] | undefined) ?? [],
         monthly: (monthlyR.data as MonthlyComparisonPoint[] | undefined) ?? [],
         ytd: (ytdR.data as YtdPoint[] | undefined) ?? [],
         byCategory: (byCategoryR.data as CategorySpend[] | undefined) ?? [],
+        summary: summaryR.data as MonthlySummary | undefined,
         isLoading: results.some((r) => r.isLoading),
         isError: results.some((r) => r.isError),
       };

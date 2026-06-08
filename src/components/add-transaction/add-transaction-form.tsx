@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Fonts, Spacing } from '@/constants/theme';
@@ -29,11 +31,13 @@ import { currencySymbol, todayIso } from '@/utils/format';
 import { AccountPicker } from './account-picker';
 import { CategoryPicker } from './category-picker';
 import { DateRow } from './date-row';
+import { InlineCalendar } from './inline-calendar';
 import { NoteRow } from './note-row';
 import { NumericKeypad } from './numeric-keypad';
 import { TypeToggle } from './type-toggle';
 
 const LAST_ACCOUNT_KEY = 'last_account_id';
+const KEYPAD_H = 248;
 
 export type AddTransactionFormProps = {
   editId: number | null;
@@ -63,6 +67,20 @@ export function AddTransactionForm({ editId }: AddTransactionFormProps): React.J
   const [date, setDate] = useState<string>(todayIso());
   const [note, setNote] = useState('');
   const [hydrated, setHydrated] = useState(false);
+
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [keypadOpen, setKeypadOpen] = useState(true);
+  const keypadH = useSharedValue(KEYPAD_H);
+  const keypadAnimStyle = useAnimatedStyle(() => ({
+    height: keypadH.value,
+    overflow: 'hidden',
+  }));
+  const toggleKeypad = (): void => {
+    const next = !keypadOpen;
+    setKeypadOpen(next);
+    // eslint-disable-next-line react-hooks/immutability -- Reanimated SharedValue assignment is its public API
+    keypadH.value = withSpring(next ? KEYPAD_H : 0, { damping: 14, stiffness: 200 });
+  };
 
   const categoriesQuery = useActiveCategories(type);
 
@@ -217,41 +235,65 @@ export function AddTransactionForm({ editId }: AddTransactionFormProps): React.J
           <TypeToggle value={type} onChange={setType} />
         </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Account</Text>
-          {accountsQuery.data === undefined ? (
-            <ActivityIndicator color={colors.textSecondary} />
-          ) : (
-            <AccountPicker
-              accounts={accountsQuery.data}
-              selectedId={accountId}
-              onSelect={setAccountId}
-            />
-          )}
-        </View>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Account</Text>
+        {accountsQuery.data === undefined ? (
+          <ActivityIndicator color={colors.textSecondary} style={styles.loader} />
+        ) : (
+          <AccountPicker
+            accounts={accountsQuery.data}
+            selectedId={accountId}
+            onSelect={setAccountId}
+          />
+        )}
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Category</Text>
-          {categoriesQuery.data === undefined ? (
-            <ActivityIndicator color={colors.textSecondary} />
-          ) : (
-            <CategoryPicker
-              categories={categoriesQuery.data}
-              selectedId={categoryId}
-              onSelect={setCategoryId}
-            />
-          )}
-        </View>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Category</Text>
+        {categoriesQuery.data === undefined ? (
+          <ActivityIndicator color={colors.textSecondary} style={styles.loader} />
+        ) : (
+          <CategoryPicker
+            categories={categoriesQuery.data}
+            selectedId={categoryId}
+            onSelect={setCategoryId}
+          />
+        )}
 
-        <View style={[styles.detailGroup, { backgroundColor: colors.backgroundElement }]}>
-          <DateRow value={date} onChange={setDate} />
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <NoteRow value={note} onChangeText={setNote} />
-        </View>
+        <DateRow
+          value={date}
+          onChange={(d) => {
+            setDate(d);
+            setShowCalendar(false);
+          }}
+          onCenterPress={() => setShowCalendar((v) => !v)}
+        />
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        {showCalendar && (
+          <InlineCalendar
+            value={date}
+            onChange={(d) => {
+              setDate(d);
+              setShowCalendar(false);
+            }}
+          />
+        )}
+        <NoteRow value={note} onChangeText={setNote} />
       </ScrollView>
 
-      <View style={[styles.keypadWrap, { paddingBottom: insets.bottom + Spacing.three }]}>
-        <NumericKeypad value={amount} onChange={setAmount} />
+      <View>
+        <TouchableOpacity
+          onPress={toggleKeypad}
+          style={[styles.keypadToggle, { borderTopColor: colors.border }]}
+          accessibilityRole="button"
+          accessibilityLabel={keypadOpen ? 'Hide keypad' : 'Show keypad'}
+        >
+          <Ionicons
+            name={keypadOpen ? 'chevron-down' : 'chevron-up'}
+            size={16}
+            color={colors.textSecondary}
+          />
+        </TouchableOpacity>
+        <Animated.View style={[keypadAnimStyle, { paddingBottom: insets.bottom + Spacing.three }]}>
+          <NumericKeypad value={amount} onChange={setAmount} />
+        </Animated.View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -280,7 +322,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.semibold,
   },
   scroll: {
-    paddingBottom: Spacing.three,
+    paddingBottom: 0,
   },
   amountWrap: {
     alignItems: 'center',
@@ -294,10 +336,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     letterSpacing: -1,
   },
-  section: {
-    gap: Spacing.two,
-    paddingVertical: Spacing.two,
-  },
   sectionTitle: {
     fontSize: 11,
     fontWeight: '700',
@@ -305,18 +343,19 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.two,
   },
-  detailGroup: {
-    marginHorizontal: Spacing.three,
-    marginTop: Spacing.three,
-    borderRadius: 14,
-    overflow: 'hidden',
+  loader: {
+    paddingVertical: Spacing.two,
   },
   divider: {
     height: StyleSheet.hairlineWidth,
     marginLeft: Spacing.three + 18 + Spacing.two,
   },
-  keypadWrap: {
-    paddingTop: Spacing.two,
+  keypadToggle: {
+    alignItems: 'center',
+    paddingVertical: Spacing.one,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });

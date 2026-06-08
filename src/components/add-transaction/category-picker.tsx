@@ -1,9 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Category } from '@/types';
+
+const COLS = 4;
 
 export type CategoryPickerProps = {
   categories: Category[];
@@ -17,13 +20,13 @@ export function CategoryPicker({
   onSelect,
 }: CategoryPickerProps): React.JSX.Element {
   const colors = useTheme();
+  const router = useRouter();
+  const { width } = useWindowDimensions();
+
+  const itemWidth = (width - Spacing.three * 2 - Spacing.two * (COLS - 1)) / COLS;
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.list}
-    >
+    <View style={styles.grid}>
       {categories.map((c) => {
         const selected = c.id === selectedId;
         const icon = c.icon as keyof typeof Ionicons.glyphMap;
@@ -35,7 +38,7 @@ export function CategoryPicker({
             accessibilityRole="button"
             accessibilityLabel={`Select category ${c.name}`}
             accessibilityState={{ selected }}
-            style={styles.item}
+            style={[styles.item, { width: itemWidth }]}
           >
             <View
               style={[
@@ -55,19 +58,37 @@ export function CategoryPicker({
           </TouchableOpacity>
         );
       })}
-    </ScrollView>
+
+      <TouchableOpacity
+        onPress={() => router.push('/category-edit')}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel="Add new category"
+        style={[styles.item, { width: itemWidth }]}
+      >
+        <View
+          style={[
+            styles.iconCircle,
+            { backgroundColor: colors.backgroundElement, borderColor: 'transparent' },
+          ]}
+        >
+          <Ionicons name="add-outline" size={22} color={colors.textSecondary} />
+        </View>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>New</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     paddingHorizontal: Spacing.three,
-    gap: Spacing.three,
-    alignItems: 'center',
+    gap: Spacing.two,
   },
   item: {
     alignItems: 'center',
-    width: 72,
     gap: 6,
   },
   iconCircle: {
@@ -82,6 +103,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '500',
+    fontFamily: Fonts.medium,
     textAlign: 'center',
   },
 });

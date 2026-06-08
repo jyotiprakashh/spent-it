@@ -1,29 +1,29 @@
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Fab } from '@/components/common/fab';
 import { TabScreen } from '@/components/common/tab-screen';
 import { BackupReminderBanner } from '@/components/backup/backup-reminder-banner';
 import { AccountBalanceList } from '@/components/dashboard/account-balance-list';
 import { BalanceCard } from '@/components/dashboard/balance-card';
+import { BudgetOverview } from '@/components/dashboard/budget-overview';
 import { MonthSelector } from '@/components/dashboard/month-selector';
 import { NetWorthCard } from '@/components/dashboard/net-worth-card';
 import { RecentTransactions } from '@/components/dashboard/recent-transactions';
-import { SpendingDonut } from '@/components/dashboard/spending-donut';
+import { SpendingTrendChart } from '@/components/dashboard/spending-trend-chart';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 import { useDashboard } from '@/hooks/use-dashboard';
+import { useCurrency } from '@/hooks/use-settings';
 import { currentYearMonth } from '@/utils/date';
 
 export default function DashboardScreen(): React.JSX.Element {
-  const router = useRouter();
   const insets = useSafeAreaInsets();
 
   const [yearMonth, setYearMonth] = useState<string>(currentYearMonth());
   const [accountId, setAccountId] = useState<number | null>(null);
 
   const data = useDashboard({ yearMonth, accountId });
+  const currency = useCurrency();
   const bottomInset = BottomTabInset + insets.bottom;
 
   return (
@@ -38,53 +38,36 @@ export default function DashboardScreen(): React.JSX.Element {
       >
         <BackupReminderBanner />
 
-        <View style={styles.section}>
-          <NetWorthCard value={data.netWorth} />
-        </View>
+        <NetWorthCard value={data.netWorth} />
 
-        <View style={styles.balanceList}>
-          <AccountBalanceList
-            accounts={data.balances}
-            selectedId={accountId}
-            totalNetWorth={data.netWorth}
-            onSelect={setAccountId}
-          />
-        </View>
+        <AccountBalanceList
+          accounts={data.balances}
+          selectedId={accountId}
+          totalNetWorth={data.netWorth}
+          onSelect={setAccountId}
+        />
 
-        <View style={styles.section}>
-          <BalanceCard summary={data.summary} />
-        </View>
+        <BalanceCard summary={data.summary} />
 
-        <View style={styles.section}>
-          <SpendingDonut data={data.byCategory} isLoading={data.isLoading} />
-        </View>
+        <BudgetOverview
+          yearMonth={yearMonth}
+          expense={data.summary?.expense ?? 0}
+          currency={currency}
+        />
 
-        <View style={styles.section}>
-          <RecentTransactions rows={data.recent} isLoading={data.isLoading} />
-        </View>
+        <SpendingTrendChart data={data.trend} isLoading={data.isLoading} />
+
+        <RecentTransactions rows={data.recent} isLoading={data.isLoading} />
       </ScrollView>
-
-      <Fab
-        onPress={() => router.push('/add-transaction')}
-        accessibilityLabel="Add transaction"
-        bottomInset={bottomInset}
-      />
     </TabScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
   headerSticky: {
     paddingBottom: Spacing.one,
   },
   scroll: {
     gap: Spacing.three,
-  },
-  section: {
-    paddingHorizontal: Spacing.three,
-  },
-  balanceList: {
-    // list itself owns its padding via contentContainerStyle
   },
 });

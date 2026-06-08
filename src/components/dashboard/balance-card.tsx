@@ -1,6 +1,7 @@
+import { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { Card } from '@/components/common/card';
 import { Money } from '@/components/common/money';
 import { SectionTitle } from '@/components/common/section-title';
 import { Fonts, Spacing } from '@/constants/theme';
@@ -18,10 +19,23 @@ export function BalanceCard({ summary, currency = 'INR' }: BalanceCardProps): Re
   const expense = summary?.expense ?? 0;
   const net = summary?.net ?? 0;
 
+  const opacity = useSharedValue(1);
+  const prevExpense = useRef(expense);
+
+  useEffect(() => {
+    if (prevExpense.current !== expense) {
+      prevExpense.current = expense;
+      opacity.value = 0.2;
+      opacity.value = withTiming(1, { duration: 380 });
+    }
+  }, [expense]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const animStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+
   return (
-    <Card>
+    <View style={[styles.container, { borderTopColor: colors.border }]}>
       <SectionTitle>This Month</SectionTitle>
-      <View style={styles.row}>
+      <Animated.View style={[styles.row, animStyle]}>
         <View style={styles.col}>
           <Text style={[styles.label, { color: colors.textSecondary }]}>Income</Text>
           <Money value={income} currency={currency} tone="income" size={17} />
@@ -40,12 +54,16 @@ export function BalanceCard({ summary, currency = 'INR' }: BalanceCardProps): Re
             signed
           />
         </View>
-      </View>
-    </Card>
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: Spacing.three,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
   row: {
     flexDirection: 'row',
     marginTop: Spacing.two,

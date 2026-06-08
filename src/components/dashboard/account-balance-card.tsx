@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Money } from '@/components/common/money';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { AccountWithBalance } from '@/types';
 
@@ -38,13 +38,13 @@ export function AccountBalanceCard({
       accessibilityLabel={isAll ? 'All accounts' : `Filter by ${account.name}`}
       accessibilityState={{ selected }}
       style={[
-        styles.card,
+        styles.chip,
         { backgroundColor: colors.backgroundElement },
         selected && { borderColor: accentColor },
       ]}
     >
       <View style={[styles.iconCircle, { backgroundColor: `${accentColor}22` }]}>
-        <Ionicons name={icon} size={18} color={accentColor} />
+        <Ionicons name={icon} size={14} color={accentColor} />
       </View>
       <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
         {name}
@@ -53,32 +53,34 @@ export function AccountBalanceCard({
         value={balance}
         currency={currency}
         tone={balance < 0 ? 'expense' : 'default'}
-        size={13}
-        weight="600"
+        size={12}
+        weight="500"
       />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: 130,
-    padding: Spacing.three,
-    borderRadius: 14,
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
     borderWidth: 2,
     borderColor: 'transparent',
-    gap: Spacing.one,
   },
   iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.one,
   },
   name: {
     fontSize: 13,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

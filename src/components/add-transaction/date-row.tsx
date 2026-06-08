@@ -3,13 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { formatRelativeDate } from '@/utils/format';
 
 export type DateRowProps = {
   value: string;
   onChange: (ymd: string) => void;
+  onCenterPress?: () => void;
 };
 
 function toYmd(d: Date): string {
@@ -24,7 +25,13 @@ function fromYmd(ymd: string): Date {
   return new Date(y, (m ?? 1) - 1, d ?? 1);
 }
 
-export function DateRow({ value, onChange }: DateRowProps): React.JSX.Element {
+function addDays(d: Date, days: number): Date {
+  const r = new Date(d);
+  r.setDate(r.getDate() + days);
+  return r;
+}
+
+export function DateRow({ value, onChange, onCenterPress }: DateRowProps): React.JSX.Element {
   const colors = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -33,29 +40,54 @@ export function DateRow({ value, onChange }: DateRowProps): React.JSX.Element {
     if (Platform.OS !== 'ios') setOpen(false);
   };
 
+  const handleCenterPress = (): void => {
+    if (onCenterPress) {
+      onCenterPress();
+    } else {
+      setOpen((p) => !p);
+    }
+  };
+
   return (
     <View>
-      <TouchableOpacity
-        onPress={() => setOpen((p) => !p)}
-        activeOpacity={0.7}
-        accessibilityRole="button"
-        accessibilityLabel={`Date ${formatRelativeDate(value)}, tap to change`}
-        style={styles.row}
-      >
-        <View style={styles.left}>
-          <Ionicons name="calendar-outline" size={18} color={colors.textSecondary} />
-          <Text style={[styles.label, { color: colors.textSecondary }]}>Date</Text>
-        </View>
-        <View style={styles.right}>
+      <View style={styles.row}>
+        <TouchableOpacity
+          onPress={() => onChange(toYmd(addDays(fromYmd(value), -1)))}
+          hitSlop={12}
+          style={styles.arrow}
+          accessibilityRole="button"
+          accessibilityLabel="Previous day"
+        >
+          <Ionicons name="chevron-back" size={20} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={handleCenterPress}
+          style={styles.center}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={`Date ${formatRelativeDate(value)}, tap to ${onCenterPress ? 'toggle calendar' : 'open picker'}`}
+        >
+          <Ionicons name="calendar-outline" size={15} color={colors.textSecondary} />
           <Text style={[styles.value, { color: colors.text }]}>{formatRelativeDate(value)}</Text>
-          <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
-        </View>
-      </TouchableOpacity>
-      {open && (
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onChange(toYmd(addDays(fromYmd(value), 1)))}
+          hitSlop={12}
+          style={styles.arrow}
+          accessibilityRole="button"
+          accessibilityLabel="Next day"
+        >
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+        </TouchableOpacity>
+      </View>
+
+      {!onCenterPress && open && (
         <DateTimePicker
           value={fromYmd(value)}
           mode="date"
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onValueChange={handleValueChange}
           onDismiss={() => setOpen(false)}
         />
@@ -70,24 +102,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.three,
+    paddingVertical: Spacing.two,
   },
-  left: {
+  arrow: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 44,
+  },
+  center: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
-  },
-  right: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'center',
     gap: Spacing.one,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '500',
   },
   value: {
     fontSize: 15,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

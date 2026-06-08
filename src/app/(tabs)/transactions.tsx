@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/common/empty-state';
-import { Fab } from '@/components/common/fab';
 import { IconButton } from '@/components/common/icon-button';
 import { TabScreen } from '@/components/common/tab-screen';
 import { AccountFilterChips } from '@/components/transactions/account-filter-chips';
@@ -82,6 +81,8 @@ export default function TransactionsScreen(): React.JSX.Element {
 
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const deleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flashListRef = useRef<FlashListRef<TxnListItem>>(null);
+  const prevFirstIdRef = useRef<number | null>(null);
 
   const allRows = useMemo(() => txnQuery.data?.pages.flatMap((p) => p.rows) ?? [], [txnQuery.data]);
   const visibleRows = useMemo(
@@ -121,6 +122,18 @@ export default function TransactionsScreen(): React.JSX.Element {
     deleteTimer.current = null;
     setPendingDeleteId(null);
   }, []);
+
+  useEffect(() => {
+    const currentFirstId = allRows[0]?.id ?? null;
+    if (
+      currentFirstId !== null &&
+      prevFirstIdRef.current !== null &&
+      currentFirstId !== prevFirstIdRef.current
+    ) {
+      flashListRef.current?.scrollToTop({ animated: true });
+    }
+    prevFirstIdRef.current = currentFirstId;
+  }, [allRows]);
 
   const handleEndReached = useCallback(() => {
     if (txnQuery.hasNextPage && !txnQuery.isFetchingNextPage) {
@@ -221,6 +234,7 @@ export default function TransactionsScreen(): React.JSX.Element {
         />
       ) : (
         <FlashList
+          ref={flashListRef}
           data={items}
           keyExtractor={(it) => it.key}
           renderItem={renderItem}
@@ -236,12 +250,6 @@ export default function TransactionsScreen(): React.JSX.Element {
           }
         />
       )}
-
-      <Fab
-        onPress={() => router.push('/add-transaction')}
-        accessibilityLabel="Add transaction"
-        bottomInset={bottomInset}
-      />
 
       {pendingDeleteId !== null && (
         <UndoToast

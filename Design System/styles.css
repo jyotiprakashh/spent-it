@@ -1,7 +1,0 @@
-/* SpentIt design system — global entry point.
- * Consumers link THIS file only. It is a manifest of @import lines:
- * everything reachable from here ships to consuming projects. */
-@import url('./tokens/fonts.css');
-@import url('./tokens/colors.css');
-@import url('./tokens/typography.css');
-@import url('./tokens/spacing.css');

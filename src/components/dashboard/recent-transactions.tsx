@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { Card } from '@/components/common/card';
 import { EmptyState } from '@/components/common/empty-state';
 import { SectionTitle } from '@/components/common/section-title';
 import { TransactionRow } from '@/components/transactions/transaction-row';
@@ -31,7 +31,7 @@ export function RecentTransactions({
   };
 
   return (
-    <Card padded={false}>
+    <View style={[styles.container, { borderTopColor: colors.border }]}>
       <View style={styles.header}>
         <SectionTitle>Recent</SectionTitle>
         <TouchableOpacity
@@ -56,16 +56,26 @@ export function RecentTransactions({
         </View>
       ) : (
         <View>
-          {rows.map((tx) => (
-            <TransactionRow key={tx.id} tx={tx} onPress={handlePressRow} />
+          {rows.map((tx, i) => (
+            <Animated.View
+              key={tx.id}
+              entering={FadeInDown.duration(260)
+                .delay(Math.min(i * 50, 200))
+                .springify()}
+            >
+              <TransactionRow tx={tx} onPress={handlePressRow} />
+            </Animated.View>
           ))}
         </View>
       )}
-    </Card>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

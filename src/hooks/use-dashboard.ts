@@ -7,6 +7,7 @@ import { TransactionRepository } from '@/db/repositories/transaction-repository'
 import type {
   AccountWithBalance,
   CategorySpend,
+  DailyTrendPoint,
   MonthlySummary,
   TransactionWithCategory,
 } from '@/types';
@@ -19,6 +20,7 @@ export type DashboardData = {
   summary: MonthlySummary | undefined;
   byCategory: CategorySpend[];
   recent: TransactionWithCategory[];
+  trend: DailyTrendPoint[];
   isLoading: boolean;
   isError: boolean;
 };
@@ -44,15 +46,20 @@ export function useDashboard(opts: { yearMonth: string; accountId: number | null
         queryKey: qk.dashboardRecent(opts.accountId),
         queryFn: () => txRepo.getRecent(5, opts.accountId),
       },
+      {
+        queryKey: qk.dashboardTrend(opts.accountId),
+        queryFn: () => txRepo.getLast30DaysSpend(opts.accountId),
+      },
     ],
     combine: (results): DashboardData => {
-      const [netWorthR, balancesR, summaryR, byCategoryR, recentR] = results;
+      const [netWorthR, balancesR, summaryR, byCategoryR, recentR, trendR] = results;
       return {
         netWorth: (netWorthR.data as number | undefined) ?? 0,
         balances: (balancesR.data as AccountWithBalance[] | undefined) ?? [],
         summary: summaryR.data as MonthlySummary | undefined,
         byCategory: (byCategoryR.data as CategorySpend[] | undefined) ?? [],
         recent: (recentR.data as TransactionWithCategory[] | undefined) ?? [],
+        trend: (trendR.data as DailyTrendPoint[] | undefined) ?? [],
         isLoading: results.some((r) => r.isLoading),
         isError: results.some((r) => r.isError),
       };

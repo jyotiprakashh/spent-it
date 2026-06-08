@@ -1,11 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Bar, CartesianChart } from 'victory-native';
+import { BarChart } from 'react-native-gifted-charts';
 
 import { Money } from '@/components/common/money';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { MonthlyComparisonPoint } from '@/types';
+import { formatCompact } from '@/utils/format';
 
 const SHORT_MONTHS = [
   'Jan',
@@ -27,11 +28,12 @@ export type MonthlyBarChartProps = {
   currency?: string;
 };
 
-type Point = {
-  idx: number;
-  income: number;
-  expense: number;
-  label: string;
+type BarItem = {
+  value: number;
+  frontColor: string;
+  label?: string;
+  labelTextStyle?: object;
+  spacing?: number;
 };
 
 function shortLabel(ym: string): string {
@@ -44,58 +46,51 @@ export function MonthlyBarChart({
   currency = 'INR',
 }: MonthlyBarChartProps): React.JSX.Element {
   const colors = useTheme();
+  const [chartWidth, setChartWidth] = useState(0);
 
-  const points = useMemo<Point[]>(
-    () =>
-      data.map((d, i) => ({
-        idx: i,
-        income: d.income,
-        expense: d.expense,
+  const barData = useMemo<BarItem[]>(() => {
+    const result: BarItem[] = [];
+    data.forEach((d, i) => {
+      result.push({
+        value: d.income,
+        frontColor: colors.income,
         label: shortLabel(d.year_month),
-      })),
-    [data],
-  );
+        spacing: 2,
+        labelTextStyle: { color: colors.textSecondary, fontSize: 9 },
+      });
+      result.push({
+        value: d.expense,
+        frontColor: colors.expense,
+        spacing: i < data.length - 1 ? 16 : 0,
+      });
+    });
+    return result;
+  }, [data, colors]);
 
   const totalIncome = useMemo(() => data.reduce((s, d) => s + d.income, 0), [data]);
   const totalExpense = useMemo(() => data.reduce((s, d) => s + d.expense, 0), [data]);
 
   return (
-    <View style={styles.wrap}>
-      <View style={styles.chart}>
-        <CartesianChart
-          data={points}
-          xKey="idx"
-          yKeys={['income', 'expense']}
-          domainPadding={{ left: 24, right: 24, top: 12, bottom: 8 }}
-        >
-          {({ points: p, chartBounds }) => (
-            <>
-              <Bar
-                points={p.income}
-                chartBounds={chartBounds}
-                color={colors.income}
-                roundedCorners={{ topLeft: 4, topRight: 4 }}
-                barWidth={10}
-              />
-              <Bar
-                points={p.expense}
-                chartBounds={chartBounds}
-                color={colors.expense}
-                roundedCorners={{ topLeft: 4, topRight: 4 }}
-                barWidth={10}
-              />
-            </>
-          )}
-        </CartesianChart>
-      </View>
+    <View style={styles.wrap} onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
+      {chartWidth > 0 && (
+        <BarChart
+          data={barData}
+          barWidth={12}
+          roundedTop
+          noOfSections={4}
+          width={chartWidth - 60}
+          height={180}
+          xAxisThickness={0}
+          yAxisThickness={0}
+          rulesColor={colors.border}
+          rulesThickness={0.5}
+          yAxisTextStyle={{ color: colors.textSecondary, fontSize: 10 }}
+          xAxisLabelTextStyle={{ color: colors.textSecondary, fontSize: 10 }}
+          formatYLabel={(v: string) => formatCompact(Number(v))}
+        />
+      )}
 
-      <View style={styles.xAxis}>
-        {points.map((p) => (
-          <Text key={p.idx} style={[styles.tick, { color: colors.textSecondary }]}>
-            {p.label}
-          </Text>
-        ))}
-      </View>
+      <Text style={[styles.xLabel, { color: colors.textSecondary }]}>Month · Amount →</Text>
 
       <View style={styles.legend}>
         <View style={styles.legendRow}>
@@ -115,16 +110,11 @@ export function MonthlyBarChart({
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  chart: { flex: 1 },
-  xAxis: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.three,
-    marginTop: 2,
-  },
-  tick: {
+  xLabel: {
     fontSize: 10,
-    fontWeight: '500',
+    fontFamily: Fonts.regular,
+    textAlign: 'center',
+    marginTop: 2,
   },
   legend: {
     flexDirection: 'row',
@@ -145,5 +135,6 @@ const styles = StyleSheet.create({
   legendLabel: {
     fontSize: 12,
     fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });

@@ -2,10 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Pie, PolarChart } from 'victory-native';
+import { PieChart } from 'react-native-gifted-charts';
 
 import { ChartSkeleton } from '@/components/common/chart-skeleton';
-import { Card } from '@/components/common/card';
 import { EmptyState } from '@/components/common/empty-state';
 import { Money } from '@/components/common/money';
 import { SectionTitle } from '@/components/common/section-title';
@@ -14,6 +13,7 @@ import { useTheme } from '@/hooks/use-theme';
 import type { CategorySpend } from '@/types';
 
 const MAX_SLICES = 5;
+const OTHER_ID = -1;
 
 export type SpendingDonutProps = {
   data: CategorySpend[];
@@ -22,14 +22,18 @@ export type SpendingDonutProps = {
 };
 
 type Slice = {
-  id: number; // -1 represents "Other" rollup (no drill-down)
+  id: number;
   label: string;
   value: number;
   color: string;
   icon: string;
 };
 
-const OTHER_ID = -1;
+type PieItem = {
+  value: number;
+  color: string;
+  sliceId: number;
+};
 
 function buildSlices(data: CategorySpend[]): Slice[] {
   if (data.length === 0) return [];
@@ -71,13 +75,18 @@ export function SpendingDonut({
   const slices = useMemo(() => buildSlices(data), [data]);
   const total = useMemo(() => slices.reduce((s, x) => s + x.value, 0), [slices]);
 
-  const handlePressCategory = (id: number): void => {
-    if (id === OTHER_ID) return;
-    router.push({ pathname: '/transactions', params: { category_id: String(id) } });
+  const pieData = useMemo<PieItem[]>(
+    () => slices.map((s) => ({ value: s.value, color: s.color, sliceId: s.id })),
+    [slices],
+  );
+
+  const handlePress = (sliceId: number): void => {
+    if (sliceId === OTHER_ID) return;
+    router.push({ pathname: '/transactions', params: { category_id: String(sliceId) } });
   };
 
   return (
-    <Card>
+    <View style={styles.container}>
       <SectionTitle>Spending</SectionTitle>
       {isLoading ? (
         <View style={styles.skeleton}>
@@ -94,15 +103,19 @@ export function SpendingDonut({
       ) : (
         <>
           <View style={styles.chartWrap}>
-            <View style={styles.chart}>
-              <PolarChart data={slices} colorKey="color" valueKey="value" labelKey="label">
-                <Pie.Chart innerRadius="62%" />
-              </PolarChart>
-            </View>
-            <View style={styles.center} pointerEvents="none">
-              <Text style={[styles.totalLabel, { color: colors.textSecondary }]}>Total</Text>
-              <Money value={total} currency={currency} tone="default" size={16} weight="700" />
-            </View>
+            <PieChart
+              data={pieData}
+              donut
+              innerRadius={70}
+              radius={110}
+              onPress={(item: PieItem) => handlePress(item.sliceId)}
+              centerLabelComponent={() => (
+                <View style={styles.center}>
+                  <Text style={[styles.totalLabel, { color: colors.textSecondary }]}>Total</Text>
+                  <Money value={total} currency={currency} tone="default" size={16} weight="700" />
+                </View>
+              )}
+            />
           </View>
 
           <View style={styles.legend}>
@@ -112,7 +125,7 @@ export function SpendingDonut({
               return (
                 <TouchableOpacity
                   key={`${s.id}-${s.label}`}
-                  onPress={() => handlePressCategory(s.id)}
+                  onPress={() => handlePress(s.id)}
                   disabled={!drillable}
                   activeOpacity={0.7}
                   accessibilityRole="button"
@@ -137,11 +150,14 @@ export function SpendingDonut({
           </View>
         </>
       )}
-    </Card>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: Spacing.three,
+  },
   skeleton: {
     marginTop: Spacing.two,
   },
@@ -150,17 +166,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   chartWrap: {
-    height: 200,
     marginTop: Spacing.two,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chart: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
   center: {
     alignItems: 'center',

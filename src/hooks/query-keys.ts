@@ -17,6 +17,9 @@ export const qk = {
   dashboardByCategory: (yearMonth: string, accountId: number | null) =>
     ['dashboard', 'by_category', yearMonth, accountId] as const,
   dashboardRecent: (accountId: number | null) => ['dashboard', 'recent', accountId] as const,
+  dashboardTrend: (accountId: number | null) => ['dashboard', 'trend', accountId] as const,
+  analyticsSummary: (yearMonth: string, accountId: number | null) =>
+    ['analytics', 'summary', yearMonth, accountId] as const,
   analyticsRoot: () => ['analytics'] as const,
   analyticsDaily: (yearMonth: string, accountId: number | null) =>
     ['analytics', 'daily', yearMonth, accountId] as const,

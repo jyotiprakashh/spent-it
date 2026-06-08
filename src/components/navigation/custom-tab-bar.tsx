@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useTransactionDrawerStore } from '@/stores/transaction-drawer-store';
 
 type TabBarProps = {
   state: { index: number; routes: readonly { key: string; name: string }[] };
@@ -20,10 +21,14 @@ type TabConfig = {
 };
 
 const TAB_CONFIG: Record<string, TabConfig> = {
-  index: { inactive: 'home-outline', active: 'home', label: 'Dashboard' },
-  transactions: { inactive: 'list-outline', active: 'list', label: 'Transactions' },
-  analytics: { inactive: 'bar-chart-outline', active: 'bar-chart', label: 'Analytics' },
-  settings: { inactive: 'settings-outline', active: 'settings', label: 'Settings' },
+  index: { inactive: 'grid-outline', active: 'grid', label: 'Dashboard' },
+  transactions: { inactive: 'receipt-outline', active: 'receipt', label: 'Transactions' },
+  analytics: { inactive: 'trending-up-outline', active: 'trending-up', label: 'Analytics' },
+  settings: {
+    inactive: 'ellipsis-horizontal-outline',
+    active: 'ellipsis-horizontal',
+    label: 'Settings',
+  },
 };
 
 const shouldUseGlass = Platform.OS === 'ios' && isGlassEffectAPIAvailable();
@@ -77,9 +82,31 @@ function TabItem({
   );
 }
 
+function FabSlot({ onPress }: { onPress: () => void }): React.JSX.Element {
+  const colors = useTheme();
+  return (
+    <View style={styles.fabSlot}>
+      <View style={[styles.fabRing, { backgroundColor: colors.background }]}>
+        <TouchableOpacity
+          onPress={onPress}
+          style={[styles.fabButton, { backgroundColor: colors.primary }]}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel="Add transaction"
+        >
+          <Ionicons name="add" size={30} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
 export function CustomTabBar({ state, navigation }: TabBarProps): React.JSX.Element {
   const colors = useTheme();
   const insets = useSafeAreaInsets();
+  const openDrawer = useTransactionDrawerStore((s) => s.open);
+
+  const routes = state.routes;
 
   const barStyle = [
     styles.bar,
@@ -93,14 +120,36 @@ export function CustomTabBar({ state, navigation }: TabBarProps): React.JSX.Elem
 
   const content = (
     <View style={styles.row}>
-      {state.routes.map((route, index) => (
-        <TabItem
-          key={route.key}
-          route={route}
-          active={state.index === index}
-          onPress={() => navigation.navigate(route.name)}
-        />
-      ))}
+      {/* Dashboard */}
+      <TabItem
+        key={routes[0]?.key ?? 'index'}
+        route={routes[0] ?? { name: 'index', key: 'index' }}
+        active={state.index === 0}
+        onPress={() => navigation.navigate('index')}
+      />
+      {/* Transactions */}
+      <TabItem
+        key={routes[1]?.key ?? 'transactions'}
+        route={routes[1] ?? { name: 'transactions', key: 'transactions' }}
+        active={state.index === 1}
+        onPress={() => navigation.navigate('transactions')}
+      />
+      {/* Center FAB */}
+      <FabSlot onPress={openDrawer} />
+      {/* Analytics */}
+      <TabItem
+        key={routes[2]?.key ?? 'analytics'}
+        route={routes[2] ?? { name: 'analytics', key: 'analytics' }}
+        active={state.index === 2}
+        onPress={() => navigation.navigate('analytics')}
+      />
+      {/* Settings */}
+      <TabItem
+        key={routes[3]?.key ?? 'settings'}
+        route={routes[3] ?? { name: 'settings', key: 'settings' }}
+        active={state.index === 3}
+        onPress={() => navigation.navigate('settings')}
+      />
     </View>
   );
 
@@ -123,12 +172,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    overflow: 'visible',
   },
   bar: {
     paddingTop: Spacing.two,
+    overflow: 'visible',
   },
   row: {
     flexDirection: 'row',
+    overflow: 'visible',
   },
   tabItem: {
     flex: 1,
@@ -142,5 +194,32 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     fontFamily: Fonts.medium,
+  },
+  fabSlot: {
+    flex: 1,
+    alignItems: 'center',
+    overflow: 'visible',
+    height: 56,
+  },
+  fabRing: {
+    position: 'absolute',
+    top: -20,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fabButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
 });

@@ -398,6 +398,22 @@ export class TransactionRepository extends BaseRepository {
     });
   }
 
+  async getLast30DaysSpend(accountId: number | null = null): Promise<DailyTrendPoint[]> {
+    return this.execute(async () => {
+      return this.db.getAllAsync<DailyTrendPoint>(
+        `SELECT date, CAST(SUM(amount) AS REAL) AS total
+         FROM transactions
+         WHERE type = 'expense'
+           AND is_transfer = 0
+           AND (? IS NULL OR account_id = ?)
+           AND date >= date('now', '-29 days')
+         GROUP BY date
+         ORDER BY date ASC`,
+        [accountId, accountId],
+      );
+    });
+  }
+
   async getYearToDate(year: number, accountId: number | null = null): Promise<YtdPoint[]> {
     return this.execute(async () => {
       return this.db.getAllAsync<YtdPoint>(
